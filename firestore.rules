@@ -1,10 +1,91 @@
 rules_version = '2';
+// Heritage Treasure Hunt – Firestore security rules.
+// Paste all of this into Firebase console > Firestore Database > Rules, then Publish.
+//
+// Who can see what:
+//   Public (no PIN):      event details (meta) and the scoreboard (board). No clues, routes, PINs or phones.
+//   Spot volunteer (PIN): spots, teams, alerts. Can only log arrivals and send/acknowledge their own spot's alerts.
+//   Control room (PIN):   everything, including PINs and the activity log.
+// PINs live in /pins/{pin}. Nobody can list them except the control room, so they can't be downloaded.
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Only the hunt's own collections, and only until 15 Oct 2026.
-    match /{col}/{doc} {
-      allow read, write: if col in ['meta', 'spots', 'teams', 'log', 'alerts']
-                         && request.time < timestamp.date(2026, 10, 15);
+
+    // The whole database switches off after the event. Change the date to keep using it.
+    function open() { return request.time < timestamp.date(2026, 10, 15); }
+
+    function signedIn() { return request.auth != null; }
+    function grantPath() { return /databases/$(database)/documents/grants/$(request.auth.uid); }
+    function grant() { return get(grantPath()).data; }
+    // Fails (denies) when the PIN no longer exists, so changing a PIN signs that device out.
+    function pinMatches(pin, role, spotId) {
+      let p = get(/databases/$(database)/documents/pins/$(pin)).data;
+      return p.role == role && (role == 'admin' || p.spotId == spotId);
+    }
+    function isStaff() {
+      return signedIn() && exists(grantPath()) && pinMatches(grant().pin, grant().role, grant().spotId);
+    }
+    function isAdmin() { return isStaff() && grant().role == 'admin'; }
+    function onlyChanges(keys) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys); }
+
+    match /meta/{id} {
+      allow read: if open();
+      allow write: if open() && isAdmin();
+    }
+
+    // Public copy of each team's progress for the scoreboard (name, colour, times only).
+    match /board/{id} {
+      allow read: if open();
+      allow create, delete: if open() && isAdmin();
+      allow update: if open() && (isAdmin() || (isStaff() && onlyChanges(['checkins'])));
+    }
+
+    match /spots/{id} {
+      allow read: if open() && isStaff();
+      allow write: if open() && isAdmin();
+    }
+
+    match /teams/{id} {
+      allow read: if open() && isStaff();
+      allow create, delete: if open() && isAdmin();
+      allow update: if open() && (isAdmin() || (isStaff() && onlyChanges(['checkins'])));
+    }
+
+    match /alerts/{id} {
+      allow read: if open() && isStaff();
+      allow create: if open() && (isAdmin() || (isStaff()
+                      && request.resource.data.spotId == grant().spotId
+                      && request.resource.data.resolved == false));
+      allow update: if open() && (isAdmin() || (isStaff()
+                      && resource.data.spotId == grant().spotId
+                      && onlyChanges(['ack', 'ackAt'])));
+      allow delete: if open() && isAdmin();
+    }
+
+    match /log/{id} {
+      allow read, delete: if open() && isAdmin();
+      allow create: if open() && isStaff();
+    }
+
+    match /pins/{pin} {
+      // Checking one PIN you already know is allowed; listing them is not.
+      allow get: if open() && signedIn();
+      allow list, update, delete: if open() && isAdmin();
+      allow create: if open() && signedIn() && (isAdmin() || (
+        // One-time upgrade from the old version: the old admin PIN (stored in meta/event)
+        // may claim control-room access. The app deletes that field right after, closing this path.
+        request.resource.data.keys().hasOnly(['role'])
+        && request.resource.data.role == 'admin'
+        && exists(/databases/$(database)/documents/meta/event)
+        && string(get(/databases/$(database)/documents/meta/event).data.get('adminPin', '')) == pin));
+    }
+
+    // One per signed-in device: which PIN it used. Only valid while that PIN still exists.
+    match /grants/{uid} {
+      allow get, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if open() && signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['pin', 'role', 'spotId', 't'])
+        && request.resource.data.pin is string
+        && pinMatches(request.resource.data.pin, request.resource.data.role, request.resource.data.get('spotId', null));
     }
   }
 }

@@ -1,0 +1,4 @@
+# Never serve these from the live site, even if they were uploaded by mistake.
+/seed-data.js      /404  404!
+/SETUP-GUIDE.txt   /404  404!
+/firestore.rules   /404  404!

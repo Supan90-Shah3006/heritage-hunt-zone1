@@ -4,84 +4,106 @@ Zonal Meet 1.0 · 27 Sept 2026
 What's in this folder
   index.html          The app. This is the only file that changes when you update the app.
   firebase-config.js  Your database settings. You fill this in once, then keep it.
-  seed-data.js        Your 25 spots, event details and example teams. Used once.
+  seed-data.js        Your 25 spots, event details and example teams. Used once, from your
+                      computer. It is blocked on the live site and holds no PINs.
   firestore.rules     Security rules to paste into Firebase.
+  _headers, _redirects  Netlify security settings. Keep them in the folder.
   logos/              All logos.
 
-Takes about 20–30 minutes. You need a Google account and a laptop.
+How access works
+  - Everyone can open the link and see the event details and the live scoreboard.
+  - Spots, routes, clues, hints, phone numbers and PINs are only sent to phones that
+    signed in with a PIN. They are not in the page and cannot be downloaded without one.
+  - There is ONE sign-in box. The admin PIN opens the Control room; a spot PIN opens that
+    spot's volunteer screen.
+  - Changing a PIN signs out every phone that used the old one.
 
-------------------------------------------------------------
+============================================================
+UPGRADING THE SITE THAT IS ALREADY LIVE (do this once)
+============================================================
+Your old spot PINs (1001–1025) and the admin PIN were public, so replace them.
+
+U1. Firebase console > Build > Authentication > Get started > Sign-in method >
+    Anonymous > Enable > Save.
+U2. Authentication > Settings > Authorized domains: make sure your Netlify address
+    (e.g. heritage-hunt-zone1.netlify.app) is listed. Add it if not.
+    Do U3 to U5 back to back: the site does not work between U3 and U5.
+U3. Firestore Database > Rules: replace everything with firestore.rules, click Publish.
+U4. Netlify: upload this folder again (see "Making changes" below). Do not include
+    seed-data.js if you can avoid it (it is blocked anyway).
+U5. Right away, open your link and sign in with your CURRENT admin PIN.
+    The app moves the PINs into protected storage by itself and says
+    "Security upgrade done".
+U6. Settings > Admin PIN: set a new admin PIN (6 to 12 digits).
+U7. Spots tab > "Replace all spot PINs". Then tap "Show PINs" and send each volunteer
+    only their own new PIN.
+
+============================================================
+FRESH SETUP (new Firebase project)
+============================================================
 PART A – CREATE THE DATABASE (Firebase, free)
-------------------------------------------------------------
 1. Go to https://console.firebase.google.com and sign in with Google.
-2. Click "Create a project". Name it e.g. heritage-hunt-zone1.
-   Turn OFF Google Analytics (not needed). Click Create.
-3. In the left menu: Build > Firestore Database > Create database.
-   - Location: asia-south1 (Mumbai)
-   - Choose "Start in production mode". Click Create.
-4. Open the "Rules" tab of Firestore. Delete everything there, paste the
-   whole content of firestore.rules from this folder, click Publish.
-   (The rules allow only this app's data and switch off on 15 Oct 2026.
-   To keep using it longer, change the date in the rules and Publish again.)
-5. Click the gear icon (top left) > Project settings > General.
-   Scroll to "Your apps" and click the web icon  </>
-   - App nickname: hunt-web. Do NOT tick Firebase Hosting. Click Register app.
-   - You will see a block called firebaseConfig with apiKey, authDomain,
-     projectId, storageBucket, messagingSenderId, appId.
-6. Open firebase-config.js from this folder in Notepad (Windows) or TextEdit
-   (Mac) and replace each PASTE_... value with the matching value from
-   Firebase. Keep the quotes. Save the file.
+2. Create a project, e.g. heritage-hunt-zone1. Turn OFF Google Analytics.
+3. Build > Firestore Database > Create database.
+   - Location: asia-south1 (Mumbai). Start in production mode.
+4. Firestore > Rules tab: delete everything, paste the whole of firestore.rules, Publish.
+   (The rules switch the database off on 15 Oct 2026. To keep using it longer, change
+   the date in the rules and Publish again.)
+5. Build > Authentication > Get started > Sign-in method > Anonymous > Enable.
+6. Create your admin PIN: Firestore > Data > Start collection
+   - Collection ID: pins
+   - Document ID: your admin PIN, 6 to 12 digits (e.g. 48 27 19 06 -> 48271906)
+   - Field: role   Type: string   Value: admin
+   Save. Share this PIN only with the control room team.
+7. Gear icon > Project settings > General > Your apps > web icon </>
+   - Nickname: hunt-web. Do NOT tick Firebase Hosting. Register app.
+   - Copy the firebaseConfig values into firebase-config.js (keep the quotes). Save.
 
-------------------------------------------------------------
 PART B – PUT THE SITE ONLINE (Netlify, free)
-------------------------------------------------------------
-7. Go to https://app.netlify.com/signup and create a free account
-   (sign in with Google is fine). Create the account FIRST: sites
-   dropped without an account are deleted after an hour.
-8. In Netlify: Add new site > Deploy manually.
-   Drag this whole folder onto the upload area. Wait for "Published".
-9. Site configuration > Change site name > e.g. heritage-hunt-zone1.
-   Your link is now https://heritage-hunt-zone1.netlify.app
+8. Create a free account at https://app.netlify.com/signup FIRST.
+9. Add new site > Deploy manually. Drag this whole folder onto the upload area.
+10. Site configuration > Change site name, e.g. heritage-hunt-zone1.
+    Your link: https://heritage-hunt-zone1.netlify.app
+11. Firebase > Authentication > Settings > Authorized domains: add that address.
 
-------------------------------------------------------------
 PART C – FIRST RUN
-------------------------------------------------------------
-10. Open your link. You will see "First-time setup".
-    Tap "Load starting data" (tap twice to confirm).
-    If you see "Not connected to the database", check firebase-config.js.
-11. Open the Control room with admin PIN 2026. Then in Settings:
-    - change the admin PIN,
-    - fill start point, finish point, control room phone numbers.
-12. Spots & volunteers: add each volunteer's name and phone, check each
-    spot PIN, and fill the clue text and hint for each spot.
-13. Teams: delete the 3 example teams and register your real teams.
+12. Open your link, enter your admin PIN.
+13. Dashboard shows "First-time setup": tap "Choose seed-data.js" and pick the file
+    from this folder on your computer.
+14. Spots tab > "Create missing PINs". Each spot gets a random 6-digit PIN.
+15. Settings: fill start point, finish point and control room phone numbers.
+16. Spots: add each volunteer's name and phone, the clue text and hint for each spot.
+17. Teams: delete the 3 example teams and register your real teams.
 
-------------------------------------------------------------
-PART D – GIVE ACCESS TO VOLUNTEERS
-------------------------------------------------------------
-14. Send each volunteer the link and ONLY their own spot PIN
-    (e.g. on WhatsApp). No account or app install is needed.
-    Ask them to "Add to Home screen" in Chrome/Safari for quick access.
-15. Share the admin PIN only with the control room team.
-16. For the start/finish screen, open the link and tap "Show scoreboard".
-17. Rehearse with 2–3 phones on 26 Sept. Afterwards: Settings >
-    "Reset all progress" to clear test times and lifelines.
+============================================================
+GIVING ACCESS TO VOLUNTEERS
+============================================================
+- Send each volunteer the link and ONLY their own spot PIN (e.g. on WhatsApp).
+  No account or app install is needed. Ask them to "Add to Home screen".
+- Share the admin PIN only with the control room team.
+- For the start/finish screen, open the link and tap "View live scoreboard".
+- Rehearse with 2–3 phones on 26 Sept. Afterwards: Settings > "Reset all progress".
+- If a PIN leaks, change it (Spots > tap the spot > New > Save). The old one stops
+  working at once and that phone is signed out.
 
-------------------------------------------------------------
+============================================================
 MAKING CHANGES AFTER IT IS LIVE
-------------------------------------------------------------
-- Event details, spots, volunteers, PINs, clues, hints, teams, routes:
-  change them any time inside the app (Control room). No redeploy needed.
-  Everyone sees the change instantly.
-- Changes to how the app works or looks: ask Claude for an updated
-  index.html. Replace ONLY index.html in this folder (keep your filled
-  firebase-config.js), then in Netlify open your site > Deploys and drag
-  the folder onto the upload area again. Same link, all data kept.
-  Tell volunteers to refresh the page.
+============================================================
+- Event details, spots, volunteers, PINs, clues, hints, teams, routes: change them in
+  the app (Control room). No redeploy needed. Everyone sees the change instantly.
+- New app version: replace ONLY index.html (keep your firebase-config.js), then in
+  Netlify open your site > Deploys and drag the folder onto the upload area again.
+  Same link, all data kept. Tell volunteers to refresh the page.
 - Keep a copy of this folder (e.g. Google Drive) as your master copy.
+
+Extra protection (optional, 2 minutes)
+- Google Cloud console > APIs & Services > Credentials > your "Browser key":
+  Application restrictions > Websites > add https://YOUR-SITE.netlify.app/* and Save.
+  Then the Firebase key only works from your site.
 
 Tips for event day
 - Volunteers' phones: screen brightness up, battery full, power bank.
-- If a phone loses network, arrivals are saved on the phone and sync
-  when the network returns (the app will say so).
-- Control room should keep the Dashboard open on a laptop.
+- If a phone loses network, arrivals are saved on the phone and sync when the
+  network returns (the app will say so).
+- Control room should keep the Dashboard open on a laptop. It also keeps the public
+  scoreboard up to date.
