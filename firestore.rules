@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only the hunt's own collections, and only until 15 Oct 2026.
+    match /{col}/{doc} {
+      allow read, write: if col in ['meta', 'spots', 'teams', 'log', 'alerts']
+                         && request.time < timestamp.date(2026, 10, 15);
+    }
+  }
+}

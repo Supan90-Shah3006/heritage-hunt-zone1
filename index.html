@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3A2015">
+<title>Heritage Hunt Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Rasa:wght@600;700&family=Hind+Vadodara:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#EEE2CB; --surface:#FBF5E9; --surface2:#EBDDC1; --ink:#2A1A11; --ink2:#6A5242; --line:#D5BE98;
+  --teal:#23397A; --teal-ink:#FFFFFF; --gold:#B07F22; --gold-soft:#F2DFB2; --indigo:#23397A;
+  --wood:#3A2015; --wood-ink:#F5E7CB; --gate:#C9AE82; --gate2:#B5966A;
+  --ok:#2C7443; --ok-soft:#D9EBD8; --warn:#9A5B0C; --warn-soft:#F5E1C2; --bad:#A8322A; --bad-soft:#F4D7D0;
+  --jali:rgba(226,180,88,.16); --patt:rgba(122,84,40,.07); --shadow:0 1px 2px rgba(58,32,21,.10),0 6px 18px rgba(58,32,21,.07);
+  --display:"Rozha One",Georgia,"Times New Roman",serif; --body:"Hind Vadodara","Hind",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace; --guj:"Rasa","Hind Vadodara",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#17100B; --surface:#221812; --surface2:#2D2119; --ink:#F1E5CF; --ink2:#BBA589; --line:#47362A;
+  --teal:#91A8EA; --teal-ink:#0E1328; --gold:#E0B25A; --gold-soft:#3B2C14; --indigo:#91A8EA;
+  --wood:#0F0906; --wood-ink:#F1E1C2; --gate:#3A2A1E; --gate2:#4A3626;
+  --ok:#66C18A; --ok-soft:#18301F; --warn:#E3A752; --warn-soft:#3A2913; --bad:#EE7E71; --bad-soft:#3E1D18;
+  --jali:rgba(224,178,90,.12); --patt:rgba(224,178,90,.045); --shadow:0 1px 2px rgba(0,0,0,.45);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#17100B; --surface:#221812; --surface2:#2D2119; --ink:#F1E5CF; --ink2:#BBA589; --line:#47362A;
+  --teal:#91A8EA; --teal-ink:#0E1328; --gold:#E0B25A; --gold-soft:#3B2C14; --indigo:#91A8EA;
+  --wood:#0F0906; --wood-ink:#F1E1C2; --gate:#3A2A1E; --gate2:#4A3626;
+  --ok:#66C18A; --ok-soft:#18301F; --warn:#E3A752; --warn-soft:#3A2913; --bad:#EE7E71; --bad-soft:#3E1D18;
+  --jali:rgba(224,178,90,.12); --patt:rgba(224,178,90,.045); --shadow:0 1px 2px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+html,body{background:var(--bg)}
+body{background-color:var(--bg);background-image:repeating-linear-gradient(45deg,var(--patt) 0 1px,transparent 1px 22px),repeating-linear-gradient(-45deg,var(--patt) 0 1px,transparent 1px 22px),radial-gradient(circle at 11px 11px,var(--patt) 2px,transparent 2.5px);background-size:auto,auto,22px 22px;background-attachment:fixed}
+body{color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.15;text-wrap:balance;margin:0}
+.mono,.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--ink2)}
+.small{font-size:13px}
+
+/* header with jali lattice */
+.top{background-color:var(--wood);color:var(--wood-ink);border-bottom:2px solid var(--gold);position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
+  background-image:repeating-linear-gradient(45deg,var(--jali) 0 1px,transparent 1px 13px),repeating-linear-gradient(-45deg,var(--jali) 0 1px,transparent 1px 13px)}
+.top::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:8px;background:radial-gradient(circle at 8px 0,var(--gold) 6px,transparent 6.5px) 0 0/16px 8px repeat-x;pointer-events:none}
+.top-in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;min-width:0;flex:1}
+.brand h1{font-size:23px;color:var(--wood-ink)}
+.brand span{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
+.top .pill{background:rgba(255,255,255,.08);color:inherit;border:1px solid rgba(224,178,90,.35)}
+.top button{background:transparent;border:1px solid currentColor;color:inherit;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}
+.clock{font-family:var(--mono);font-size:14px}
+
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:26px 60px}
+.banner{background:var(--gold-soft);color:var(--ink);border-bottom:2px solid var(--gold)}
+.banner .wrap{padding-block:10px;display:flex;gap:10px;align-items:flex-start}
+.banner b{color:var(--warn)}
+
+nav.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:18px;scrollbar-width:thin}
+nav.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;cursor:pointer;white-space:nowrap;color:var(--ink2);font-weight:600}
+nav.tabs button[aria-current="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+.badge{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;text-align:center;margin-left:4px;line-height:18px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:9px;border:1px solid var(--line);background:var(--surface);padding:8px 14px;cursor:pointer;font-weight:600;text-decoration:none}
+.btn:hover{border-color:var(--ink2)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:var(--teal-ink)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#1E1606}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.danger.armed{background:var(--bad);color:#fff}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:7px}
+.btn.big{padding:13px 18px;font-size:16px;width:100%}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;background:var(--surface2);color:var(--ink2);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.gold{background:var(--gold-soft);color:var(--warn)}
+.pill.live::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.pill.live::before,.pip.next{animation:none!important}}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.sec{display:grid;gap:14px;margin-bottom:26px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sec-h h2{font-size:23px;display:flex;align-items:center;gap:10px}
+.sec-h h2::before{content:"";width:9px;height:9px;background:var(--gold);transform:rotate(45deg);flex:none}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi b{display:block;font-family:var(--mono);font-size:26px;line-height:1.2}
+.kpi span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);font-weight:600;background:var(--surface2)}
+tr:last-child td{border-bottom:0}
+td.c,th.c{text-align:center;padding-inline:4px}
+td.r,th.r{text-align:right}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--surface2)}
+.sw{width:12px;height:12px;border-radius:3px;background:var(--c);display:inline-block;flex:none}
+.tname{display:flex;align-items:center;gap:8px;font-weight:600;white-space:nowrap}
+
+.pip{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:24px;border-radius:6px;border:1px dashed var(--line);font-family:var(--mono);font-size:11px;color:var(--ink2)}
+.pip.done{background:var(--teal);border:1px solid var(--teal);color:var(--teal-ink)}
+.pip.next{border:2px solid var(--gold);color:var(--warn);font-weight:700;animation:glow 2s infinite}
+@keyframes glow{50%{background:var(--gold-soft)}}
+.dots{display:inline-flex;gap:4px}
+.dots i{width:10px;height:10px;border-radius:50%;border:2px solid var(--gold);display:inline-block}
+.dots i.used{background:transparent;border-color:var(--line)}
+.dots i.left{background:var(--gold)}
+
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;align-content:start}
+.card h3{font-size:19px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row.sp{justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:5px;list-style:none;margin:0;padding:0}
+.chips li{font-size:12px;background:var(--surface2);border-radius:6px;padding:2px 7px}
+.chips li b{font-family:var(--mono);color:var(--teal);margin-right:3px}
+.warnline{font-size:13px;color:var(--warn)}
+
+.spotgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.spot{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--surface);display:grid;gap:3px}
+.spot .no{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.spot.hot{border-color:var(--gold);box-shadow:inset 3px 0 0 var(--gold)}
+.spot.alert{border-color:var(--bad);box-shadow:inset 3px 0 0 var(--bad)}
+
+.feed{list-style:none;margin:0;padding:0;display:grid}
+.feed li{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.feed li:last-child{border-bottom:0}
+.feed time{font-family:var(--mono);font-size:12px;color:var(--ink2);padding-top:2px}
+
+/* forms */
+label.f{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--ink2)}
+input[type=text],input[type=tel],input[type=password],input[type=number],input[type=time],input[type=date],input[type=url],select,textarea{
+  width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-weight:400;color:var(--ink)}
+textarea{min-height:64px;resize:vertical}
+.fgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:12px;margin:0;display:grid;gap:10px}
+legend{font-weight:700;padding:0 6px;font-size:14px}
+.err{color:var(--bad);font-size:13px;font-weight:600}
+
+/* login */
+.login{display:grid;gap:26px;max-width:1000px;margin:0 auto}
+.hero{position:relative;background:var(--wood);color:var(--wood-ink);border-radius:18px;overflow:hidden;border:1px solid var(--gold);
+  background-image:repeating-linear-gradient(45deg,var(--jali) 0 1px,transparent 1px 16px),repeating-linear-gradient(-45deg,var(--jali) 0 1px,transparent 1px 16px)}
+.hero-in{position:relative;padding:30px 22px 12px;display:grid;gap:10px;justify-items:center;text-align:center}
+.hero .presents{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);max-width:48ch}
+.hero .series{font-family:var(--mono);font-size:13px;letter-spacing:.18em;border:1px solid var(--gold);color:var(--gold);padding:3px 12px;border-radius:999px}
+.hero h2{font-size:clamp(34px,7.5vw,62px);color:var(--wood-ink);line-height:1.02}
+.hero .guj{font-family:var(--guj);font-size:clamp(22px,4vw,30px);color:var(--gold);line-height:1;font-weight:700}
+.orn{display:flex;align-items:center;gap:10px;color:var(--gold);width:min(340px,80%)}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:currentColor;opacity:.7}
+.orn i{width:8px;height:8px;background:currentColor;transform:rotate(45deg)}
+.hero .tag{font-size:17px;margin:0;max-width:52ch}
+.hero .facts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:4px}
+.hero .facts span{border:1px solid rgba(224,178,90,.5);border-radius:10px;padding:6px 12px;font-weight:600;font-size:14px;background:rgba(255,255,255,.05)}
+.hero .facts b{color:var(--gold);font-weight:600;margin-right:6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.hero .motto{font-family:var(--display);font-size:19px;color:var(--gold);letter-spacing:.02em}
+.hero .hosts{font-size:13px;opacity:.9;max-width:70ch}
+.hero .hosts b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+.contact{background:var(--wood);color:var(--wood-ink);border:1px solid var(--gold);border-radius:14px;padding:14px;display:grid;gap:10px}
+.contact .ph{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--gold);user-select:all}
+.contact .btn{border-color:rgba(224,178,90,.6)}
+.contact .btn:not(.pri):not(.gold):not(.danger){background:transparent;color:var(--wood-ink)}
+.msg{border:2px solid var(--gold);background:var(--surface);border-radius:14px;padding:14px;display:grid;gap:8px}
+.msg.hint{background:var(--gold-soft)}
+.msg .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--warn)}
+.msg .body{font-size:18px;font-weight:600;white-space:pre-wrap}
+.msg.wait{border-style:dashed;border-color:var(--line);background:transparent}
+.logobar{background:#FFFBF2;border-bottom:1px solid #E3CFA6}
+.logobar .in{max-width:1180px;margin:0 auto;padding:8px 16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 0}
+.logobar .grp{display:flex;align-items:center;flex-wrap:nowrap}
+.logobar img{height:36px;width:auto;padding-inline:12px;object-fit:contain}
+.logobar .grp img+img{border-left:1px solid #E3CFA6}
+.logobar .grp+.grp{border-left:2px solid #C9A968;margin-left:6px;padding-left:6px}
+@media (max-width:760px){.logobar img{height:28px;padding-inline:8px}}
+@media (max-width:380px){.logobar img{height:21px;padding-inline:5px}}
+.hostcard{background:#FFFBF2;border:1px solid var(--gold);border-radius:12px;padding:12px 16px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px}
+.hostcard img{height:58px;width:auto;max-width:100%;object-fit:contain}
+@media (max-width:520px){.hostcard img{height:40px}}
+.logos{background:#FFFBF2;border:1px solid var(--gold);border-radius:14px;padding:14px 18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 0;box-shadow:var(--shadow)}
+.logos img{height:46px;width:auto;max-width:100%;padding-inline:18px;object-fit:contain}
+.logos img+img{border-left:1px solid #D9C7A4}
+.logos.lg img{height:62px}
+.logos.sm{padding:8px 12px;border-radius:10px;box-shadow:none}
+.logos.sm img{height:30px;padding-inline:12px}
+@media (max-width:640px){.logos img{height:38px;padding-inline:10px}.logos.lg img{height:44px}.logos img+img{border-left:0}.logos.sm img{height:24px;padding-inline:8px}}
+.foot{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 28px;display:grid;gap:8px;justify-items:center}
+.foot p{margin:0;font-size:12px;color:var(--ink2);text-align:center}
+.gate{display:block;width:100%;height:auto;margin-top:6px}
+.stats{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.doors{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.door{background:var(--surface);border:1px solid var(--line);border-radius:150px 150px 14px 14px / 70px 70px 14px 14px;padding:34px 20px 20px;display:grid;gap:12px;align-content:start;box-shadow:var(--shadow);position:relative}
+.door::before{content:"";position:absolute;inset:6px;border:1px solid var(--gold-soft);border-radius:inherit;pointer-events:none}
+.door>*{position:relative}
+.door h3{font-size:24px;text-align:center}
+.door .kick{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;text-align:center}
+.door>p{text-align:center}
+.flow{list-style:none;margin:0;padding:0;display:grid;gap:8px;counter-reset:f}
+.flow li{counter-increment:f;display:flex;gap:10px;font-size:14px;align-items:flex-start}
+.flow li::before{flex:none;content:counter(f);font-family:var(--mono);width:24px;height:24px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-size:12px;font-weight:700}
+
+/* volunteer */
+.vhead{display:grid;gap:4px}
+.vhead .no{font-family:var(--mono);color:var(--gold);font-weight:700;letter-spacing:.05em}
+.vhead h2{font-size:clamp(26px,6vw,36px)}
+.vteam{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;border-left:6px solid var(--c)}
+.vteam.here{border-color:var(--gold);border-left-color:var(--c);box-shadow:0 0 0 2px var(--gold-soft)}
+.vteam h3{font-size:21px}
+.handover{background:var(--surface2);border-radius:10px;padding:12px;display:grid;gap:6px}
+.handover .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--teal)}
+.handover p{margin:0;white-space:pre-wrap}
+.bigclue{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--teal);line-height:1}
+
+/* scoreboard */
+.lb{display:grid;gap:8px}
+.lbrow{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.lbrow .rk{font-family:var(--display);font-size:28px;color:var(--ink2);text-align:center}
+.lbrow.r1 .rk{color:var(--gold)}
+.lbrow .pips{display:flex;gap:3px;margin-top:5px}
+.lbrow .pips i{flex:1;max-width:34px;height:7px;border-radius:3px;background:var(--surface2)}
+.lbrow .pips i.on{background:var(--teal)}
+.lbrow .pips i.nx{background:var(--gold)}
+.lbrow .tm{text-align:right;font-family:var(--mono);font-size:15px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(6,14,13,.55);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:max(16px,env(safe-area-inset-top,0px)) 16px 40px}
+.sheet{background:var(--surface);color:var(--ink);border-radius:14px;width:min(760px,100%);box-shadow:0 20px 60px rgba(0,0,0,.3);margin-top:4vh}
+.sheet-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.sheet-h h2{font-size:22px}
+.sheet-b{padding:16px;display:grid;gap:14px}
+.sheet-f{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.x{background:none;border:0;font-size:26px;line-height:1;cursor:pointer;color:var(--ink2)}
+.routerow{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.routerow:last-child{border-bottom:0}
+.routerow .n{font-family:var(--mono);font-weight:700;color:var(--teal);font-size:18px;padding-top:4px}
+.routerow .ins{display:grid;gap:6px}
+.swatches{display:flex;flex-wrap:wrap;gap:6px}
+.swatches label{cursor:pointer}
+.swatches input{position:absolute;opacity:0;pointer-events:none}
+.swatches span{display:block;width:28px;height:28px;border-radius:7px;background:var(--c);border:3px solid transparent}
+.swatches input:checked+span{border-color:var(--ink)}
+.swatches input:focus-visible+span{outline:2px solid var(--gold)}
+.steprow{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.steprow:last-child{border-bottom:0}
+
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;display:grid;gap:6px;width:min(420px,calc(100% - 32px))}
+#toast div{background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-weight:600;box-shadow:var(--shadow)}
+#toast div.bad{background:var(--bad);color:#fff}
+.empty{padding:26px;text-align:center;color:var(--ink2);border:1px dashed var(--line);border-radius:12px}
+.two{display:grid;gap:18px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+@media (max-width:520px){.brand h1{font-size:18px}.lbrow{grid-template-columns:32px minmax(0,1fr) auto;gap:8px;padding:10px}.lbrow .rk{font-size:22px}}
+</style>
+</head>
+<body>
+
+<div class="logobar" id="logobar"></div>
+<header class="top"><div class="top-in" id="hdr"></div></header>
+<div id="banner"></div>
+<main class="wrap" id="main"></main>
+<footer class="foot" id="foot"></footer>
+<div class="modal" id="modal" hidden></div>
+<div id="toast" aria-live="polite"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="seed-data.js"></script>
+<script>
+const COLORS=['#C0392B','#1F77B4','#2CA02C','#8E44AD','#E67E22','#12A4B6','#8C564B','#D63384','#7A8B12','#34495E','#D4A20A','#16A085','#E84393','#5B4BDB','#00955E','#A0522D'];
+const S={meta:{},spots:[],teams:[],log:[],alerts:[],db:null,dl:null,role:null,spotId:null,tab:'dash',loaded:{},offline:false,pending:false};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const range=n=>Array.from({length:n},(_,i)=>i+1);
+const pad=(n,l=2)=>String(n).padStart(l,'0');
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function lsSet(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+/* ---------- derived ---------- */
+const N=()=>Math.max(1,Math.min(15,+S.meta.cluesToWin||8));
+const LL=()=>Math.max(0,Math.min(10,+(S.meta.lifelines??3)));
+const eventName=()=>S.meta.name||'Heritage Treasure Hunt';
+const isLive=()=>S.meta.status==='live';
+const teamById=id=>S.teams.find(t=>t.id===id);
+const spotById=id=>S.spots.find(s=>s.id===id);
+const spotLabel=id=>{const s=spotById(id);return s?`${pad(s.no)} · ${s.name}`:'Not set'};
+function route(t){const r=(t.route||[]).slice(0,N()).map(x=>x||{});while(r.length<N())r.push({});return r}
+function progress(t){const ck=t.checkins||{};let solved=0,next=null,last=null;
+  for(const i of range(N())){const c=ck[i];if(c&&c.t){solved++;if(!last||c.t>last)last=c.t}else if(next===null)next=i}
+  return {solved,next,last,finished:solved===N()}}
+function llList(t){const l=t.lifelines||{};return range(LL()).map(i=>l[i]&&l[i].t?{slot:i,...l[i]}:null)}
+const llUsed=t=>llList(t).filter(Boolean).length;
+const startOf=t=>t.startAt||S.meta.startedAt||null;
+function ranked(){return S.teams.filter(t=>!t.withdrawn).map(t=>({t,p:progress(t),ll:llUsed(t)})).sort((a,b)=>{
+  if(a.p.finished!==b.p.finished)return a.p.finished?-1:1;
+  if(a.p.finished)return (a.p.last-startOf(a.t))-(b.p.last-startOf(b.t))||a.ll-b.ll;
+  return b.p.solved-a.p.solved||(a.p.last||9e15)-(b.p.last||9e15)||a.ll-b.ll||String(a.t.code).localeCompare(b.t.code)})}
+function stepsAtSpot(spotId){const out=[];for(const t of S.teams){route(t).forEach((r,i)=>{if(r.spotId===spotId)out.push({t,step:i+1})})}return out}
+function clueOf(t,n){const r=route(t)[n-1]||{};const sp=spotById(r.spotId);return r.clue||(sp&&sp.clue)||''}
+function hintOf(t,n){const r=route(t)[n-1]||{};const sp=spotById(r.spotId);return r.hint||(sp&&sp.hint)||''}
+function routeIssues(t){const r=route(t),iss=[];const ids=r.map(x=>x.spotId).filter(Boolean);
+  if(ids.length<N())iss.push(`${N()-ids.length} route spot${N()-ids.length>1?'s':''} not set`);
+  const dup=ids.filter((v,i)=>ids.indexOf(v)!==i);if(dup.length)iss.push('Same spot used twice: '+[...new Set(dup)].map(spotLabel).join(', '));
+  const noClue=r.filter((x,i)=>x.spotId&&!clueOf(t,i+1)).length;if(noClue)iss.push(`${noClue} clue text${noClue>1?'s':''} missing`);
+  return iss}
+
+/* ---------- formatting ---------- */
+function fmtT(ts){if(!ts)return '—';return new Date(ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}
+function fmtHM(ts){const d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes())}
+function fmtDur(ms){if(ms==null||isNaN(ms)||ms<0)return '—';const s=Math.floor(ms/1000);return `${Math.floor(s/3600)}:${pad(Math.floor(s/60)%60)}:${pad(s%60)}`}
+function timeCell(t,p){const st=startOf(t);if(!st)return '<span class="muted">—</span>';
+  if(p.finished)return `<b class="num">${fmtDur(p.last-st)}</b>`;
+  if(t.withdrawn)return '<span class="muted">Withdrawn</span>';
+  if(!isLive())return `<span class="num muted">${p.last?fmtDur(p.last-st):'—'}</span>`;
+  return `<span class="num" data-since="${st}">${fmtDur(Date.now()-st)}</span>`}
+function dots(t){return `<span class="dots" title="${LL()-llUsed(t)} of ${LL()} lifelines left">${llList(t).map(x=>`<i class="${x?'used':'left'}"></i>`).join('')}</span>`}
+
+/* ---------- toast / errors ---------- */
+function toast(msg,kind){const d=document.createElement('div');if(kind)d.className=kind;d.textContent=msg;$('#toast').appendChild(d);setTimeout(()=>d.remove(),3600)}
+function errMsg(e){const c=e&&e.code;
+  if(c==='permission-denied')return 'The database refused this change. Check the Firestore rules in the Firebase console (see SETUP guide).';
+  if(c==='invalid_argument')return "Couldn't save. Your access to this page may be view-only; ask the organiser for 'Can interact' access.";
+  if(c==='quota_exceeded')return 'Storage is full. Clear old log entries in Settings.';
+  if(c==='resource_exhausted')return 'Too many changes at once. Wait a few seconds and try again.';
+  if(c==='revoked')return 'Your access to this page was removed.';
+  return 'Could not save. Check your connection and try again.'}
+async function save(fn,ok){if(!S.db){toast('Live data is not available in this view.','bad');return false}
+  try{await fn();if(ok)toast(ok);return true}catch(e){try{await new Promise(r=>setTimeout(r,600+Math.random()*600));if(e&&e.code==='unavailable'){await fn();if(ok)toast(ok);return true}}catch(e2){e=e2}toast(errMsg(e),'bad');return false}}
+function logEv(type,text,extra){if(!S.db)return;S.db.collection('log').add({t:Date.now(),type,text,...(extra||{})}).catch(()=>{})}
+function saveMeta(patch){return S.db.doc('meta/event').set({...S.meta,...patch})}
+
+/* ---------- render ---------- */
+function render(opts){opts=opts||{};const main=$('#main');const ae=document.activeElement;
+  if(!opts.force&&ae&&main.contains(ae)&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)&&main.childElementCount){S.pending=true;renderHeader();return}
+  const saved={};if(!opts.fresh)main.querySelectorAll('input[id],select[id],textarea[id]').forEach(e=>{saved[e.id]=e.type==='checkbox'?e.checked:e.value});
+  renderHeader();renderBanner();renderFoot();
+  let html;if(!S.loaded.meta&&S.db)html='<p class="muted">Loading event…</p>';
+  else if(!S.role)html=vLogin();else if(S.role==='admin')html=vAdmin();else if(S.role==='vol')html=vVol();else html=vBoard();
+  main.innerHTML=html;
+  for(const id in saved){const e=document.getElementById(id);if(e&&!e.hasAttribute('data-live')){if(e.type==='checkbox')e.checked=saved[id];else e.value=saved[id]}}
+  tick()}
+document.addEventListener('focusout',()=>setTimeout(()=>{const ae=document.activeElement;if(S.pending&&!(ae&&$('#main').contains(ae)&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName))){S.pending=false;render()}},80));
+function go(role,extra){S.role=role;Object.assign(S,extra||{});lsSet('hh.session',role?{role,spotId:S.spotId,tab:S.tab}:null);render({fresh:true});window.scrollTo(0,0)}
+
+function renderHeader(){const st=S.meta.status||'setup';
+  const pill=st==='live'?'<span class="pill live">Live</span>':st==='ended'?'<span class="pill">Ended</span>':'<span class="pill">Not started</span>';
+  const who=S.role==='admin'?'Control room':S.role==='vol'?(spotById(S.spotId)?`Spot ${pad(spotById(S.spotId).no)}`:'Volunteer'):S.role==='board'?'Scoreboard':'';
+  $('#hdr').innerHTML=`<div class="brand"><span>${[S.meta.series,dateLabel(),S.meta.startTime?fmt12(S.meta.startTime):''].filter(Boolean).map(esc).join(' · ')||'Old City, Ahmedabad'}</span><h1>${esc(eventName())}</h1></div>
+  ${pill}${S.meta.startedAt&&st==='live'?`<span class="clock" data-since="${S.meta.startedAt}" title="Time since start"></span>`:''}
+  ${who?`<span class="pill">${esc(who)}</span><button data-act="logout">Sign out</button>`:''}`}
+function dateLabel(){return S.meta.date?new Date(S.meta.date+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):''}
+function fmt12(hm){const [h,m]=String(hm).split(':').map(Number);if(isNaN(h))return hm;return `${((h+11)%12)+1}:${pad(m||0)} ${h<12?'AM':'PM'}`}
+const GATE=`<svg class="gate" viewBox="0 0 600 120" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+<g style="fill:var(--gate)">${Array.from({length:30},(_,i)=>`<rect x="${6+i*20}" y="14" width="10" height="10"/>`).join('')}<rect x="0" y="22" width="600" height="98"/></g>
+<g style="fill:var(--gate2)"><rect x="0" y="30" width="600" height="3"/><rect x="0" y="112" width="600" height="8"/></g>
+<g style="fill:var(--wood)">${[[95,110],[245,110],[395,110]].map(([x,w])=>`<path d="M${x} 120V74Q${x} 46 ${x+w/2} 36Q${x+w} 46 ${x+w} 74V120Z"/>`).join('')}
+${[45,555].map(x=>`<path d="M${x-10} 70V56Q${x-10} 48 ${x} 44Q${x+10} 48 ${x+10} 56V70Z"/>`).join('')}</g>
+<g style="fill:var(--gold)" opacity=".55">${[150,300,450].map(x=>`<circle cx="${x}" cy="30" r="3"/>`).join('')}</g></svg>`;
+const LOGOS=[['logos/rotary.png','Rotary District 3055'],['logos/impact.png','Create Lasting Impact'],['logos/unicorn.png','Emerge as Unicorn, DRR PHF Aneri Bhatt, RID 3055, RIY 2026-27'],['logos/rotaract.png','Rotaract District 3055']];
+const HOSTS=[['logos/host-kankaria.png','Rotaract Club of Kankaria'],['logos/host-emerald.png','Rotaract Club of Ahmedabad Emerald'],['logos/host-indus.png','Rotaract Club of Ahmedabad Indus University']];
+const imgs=list=>list.map(([src,alt])=>`<img src="${src}" alt="${esc(alt)}">`).join('');
+document.getElementById('logobar').innerHTML=`<div class="in"><div class="grp">${imgs(LOGOS)}</div></div>`;
+const logoBand=cls=>`<div class="logos ${cls||''}">${[...LOGOS,...(cls==='sm'||cls==='all'?HOSTS:[])].map(([src,alt])=>`<img src="${src}" alt="${esc(alt)}" loading="lazy">`).join('')}</div>`;
+function renderFoot(){const f=$('#foot');if(!S.role||S.role==='board'){f.innerHTML='';return}
+  f.innerHTML=`${logoBand('sm')}<p>${esc(S.meta.series||'')}${S.meta.series?' · ':''}${esc(eventName())}${S.meta.presenter?' · '+esc(S.meta.presenter):''}</p>`}
+function renderBanner(){const b=S.meta.broadcast;const el=$('#banner');
+  if(b&&b.msg&&S.role&&S.role!=='board'){el.className='banner';el.innerHTML=`<div class="wrap"><b>Control room · ${fmtT(b.t)}</b><span>${esc(b.msg)}</span></div>`}else{el.className='';el.innerHTML=''}}
+function tick(){const now=Date.now();document.querySelectorAll('[data-since]').forEach(e=>{e.textContent=fmtDur(now-+e.dataset.since)})}
+setInterval(tick,1000);
+
+/* ---------- login ---------- */
+function vLogin(){const spots=S.spots;
+  return `<section class="login">
+  <div class="hero"><div class="hero-in">
+    ${S.meta.presenter?`<span class="presents">${esc(S.meta.presenter)} presents</span>`:''}
+    ${S.meta.series?`<span class="series">${esc(S.meta.series)}</span>`:''}
+    <h2>${esc(eventName())}</h2><span class="guj" lang="gu">અમદાવાદ</span>
+    <div class="orn"><i></i></div>
+    ${S.meta.tagline?`<p class="tag">${esc(S.meta.tagline)}</p>`:''}
+    <div class="facts">${dateLabel()?`<span><b>Date</b>${esc(dateLabel())}</span>`:''}${S.meta.startTime?`<span><b>Time</b>${esc(fmt12(S.meta.startTime))} onwards</span>`:''}${S.meta.venue?`<span><b>Venue</b>${esc(S.meta.venue)}</span>`:''}</div>
+    ${S.meta.motto?`<div class="motto">${esc(S.meta.motto)}</div>`:''}
+    <div class="hosts"><b>Hosted by</b></div><div class="hostcard">${imgs(HOSTS)}</div>
+    ${S.meta.hosts?`<div class="hosts">${S.meta.hosts.split(/\n+/).filter(Boolean).map(esc).join(' · ')}</div>`:''}
+  </div>${GATE}</div>
+  <div class="stats"><span class="pill">${S.teams.length} teams</span><span class="pill">${spots.length} heritage spots</span><span class="pill">${N()} clues to finish</span><span class="pill">${LL()} lifelines per team</span>${S.meta.finish?`<span class="pill">Finish: ${esc(S.meta.finish)}</span>`:''}</div>
+  ${S.offline?`<div class="panel warnline">Not connected to the database. Open <b>firebase-config.js</b>, paste your Firebase settings, and upload the site again (see SETUP guide).</div>`:''}
+  ${S.db&&S.loaded.meta&&S.loaded.spots&&!S.spots.length&&!S.meta.name&&window.HH_SEED?`<div class="panel" style="display:grid;gap:8px;border-color:var(--gold)"><b>First-time setup</b><span class="small muted">The database is empty. Load the event details, the 25 spots and the example teams you set up earlier.</span><div><button class="btn gold" data-act="seed" data-confirm="Tap again to load">Load starting data</button></div></div>`:''}
+  <div class="doors">
+    <form class="door" data-form="adminLogin"><span class="kick">Organisers</span><h3>Control room</h3>
+      <p class="muted small">Register teams, assign volunteers and routes, give lifeline hints, watch every team live.</p>
+      <label class="f">Admin PIN<input type="password" inputmode="numeric" id="lg-apin" autocomplete="off"></label>
+      <button class="btn pri" type="submit">Open control room</button><span class="err" id="lg-aerr"></span></form>
+    <form class="door" data-form="volLogin"><span class="kick">At a spot</span><h3>Spot volunteer</h3>
+      <p class="muted small">See which teams come to your spot, log their arrival time, and hand over the next clue.</p>
+      <label class="f">Your spot<select id="lg-spot"><option value="">Choose your spot…</option>${spots.map(s=>`<option value="${s.id}">${pad(s.no)} · ${esc(s.name)}${s.volunteer?' ('+esc(s.volunteer)+')':''}</option>`).join('')}</select></label>
+      <label class="f">Spot PIN<input type="password" inputmode="numeric" id="lg-vpin" autocomplete="off"></label>
+      <button class="btn pri" type="submit">Open my spot</button><span class="err" id="lg-verr"></span></form>
+    <div class="door"><span class="kick">Everyone</span><h3>Live scoreboard</h3>
+      <p class="muted small">Standings and progress for all teams. Put it on a screen at the start and finish point.</p>
+      <button class="btn" data-act="board">Show scoreboard</button></div>
+  </div>
+  <div class="panel"><h3 style="font-size:19px;margin-bottom:10px">How a team moves through the hunt</h3>
+    <ol class="flow"><li>At the start${S.meta.startPoint?' ('+esc(S.meta.startPoint)+')':''} the control room hands each team Clue #1. Every team has its own route of ${N()} spots.</li>
+    <li>Clue #1 leads to the team's first spot. The volunteer there taps <b>Mark arrived</b>, which records the time, and hands over Clue #2.</li>
+    <li>This repeats spot by spot. Stuck teams call the control room to use a lifeline (${LL()} each) and get a hint for their current clue.</li>
+    <li>Arrival at spot #${N()} completes the hunt. The first team to finish wins.</li></ol></div>
+  </section>`}
+
+/* ---------- admin ---------- */
+function vAdmin(){const open=S.alerts.filter(a=>!a.resolved).length;
+  const tabs=[['dash','Dashboard'],['teams',`Teams (${S.teams.length})`],['spots',`Spots & volunteers (${S.spots.length})`],['life','Lifelines'],['act','Alerts & log'+(open?`<span class="badge">${open}</span>`:'')],['set','Settings']];
+  const body={dash:aDash,teams:aTeams,spots:aSpots,life:aLife,act:aAct,set:aSet}[S.tab]||aDash;
+  return `<nav class="tabs" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-current="${S.tab===k}" data-act="tab" data-tab="${k}">${l}</button>`).join('')}</nav>${body()}`}
+
+function boardTable(rows,clickable){
+  if(!rows.length)return `<div class="empty">No teams yet. Register teams in the Teams tab.</div>`;
+  return `<div class="tablewrap"><table><thead><tr><th>#</th><th>Team</th>${range(N()).map(i=>`<th class="c">${i}</th>`).join('')}<th class="c">Solved</th><th>Lifelines</th><th class="r">Time</th></tr></thead><tbody>
+  ${rows.map((r,ix)=>{const {t,p}=r;const rt=route(t);
+    const cells=range(N()).map(i=>{const c=(t.checkins||{})[i];const ttl=`Clue ${i} → ${spotLabel(rt[i-1].spotId)}`;
+      if(c&&c.t)return `<td class="c"><span class="pip done" title="${esc(ttl)} · arrived ${fmtT(c.t)}">${fmtHM(c.t)}</span></td>`;
+      if(p.next===i&&isLive()&&!t.withdrawn)return `<td class="c"><span class="pip next" title="${esc(ttl)} · solving now">→</span></td>`;
+      return `<td class="c"><span class="pip" title="${esc(ttl)}"></span></td>`}).join('');
+    return `<tr class="${clickable?'click':''}" ${clickable?`data-act="progress" data-id="${t.id}"`:''}><td class="num">${p.finished?`<b>${ix+1}</b>`:ix+1}</td>
+    <td><span class="tname"><span class="sw" style="--c:${t.color||'#888'}"></span>${esc(t.name)}${p.finished?' <span class="pill ok">Finished</span>':''}</span></td>
+    ${cells}<td class="c num">${p.solved}/${N()}</td><td>${dots(t)}</td><td class="r">${timeCell(t,p)}</td></tr>`}).join('')}
+  </tbody></table></div>`}
+
+function aDash(){const rows=ranked();const fin=rows.filter(r=>r.p.finished).length;const openA=S.alerts.filter(a=>!a.resolved);
+  const llTotal=S.teams.reduce((a,t)=>a+llUsed(t),0);const noVol=S.spots.filter(s=>!s.volunteer).length;
+  const st=S.meta.status||'setup';
+  const ctrl=st==='setup'?`<div class="panel row sp"><div><b>The hunt hasn't started.</b> <span class="muted">Starting sets the clock for every team.</span></div><button class="btn gold" data-act="start">Start the hunt now</button></div>`:
+    st==='ended'?`<div class="panel row sp"><div><b>The hunt has ended.</b> <span class="muted">Final standings are below.</span></div><button class="btn" data-tab="set" data-act="tab">Export results</button></div>`:'';
+  const usedSpots=new Set(S.teams.flatMap(t=>route(t).map(r=>r.spotId)).filter(Boolean));
+  return `<div class="sec">${ctrl}
+   <div class="kpis"><div class="kpi"><span>Teams</span><b>${S.teams.filter(t=>!t.withdrawn).length}</b></div>
+   <div class="kpi"><span>On course</span><b>${rows.filter(r=>!r.p.finished&&r.p.solved>0).length}</b></div>
+   <div class="kpi"><span>Finished</span><b>${fin}</b></div>
+   <div class="kpi"><span>Lifelines used</span><b>${llTotal}</b></div>
+   <div class="kpi"><span>Open alerts</span><b style="color:${openA.length?'var(--bad)':'inherit'}">${openA.length}</b></div></div>
+   ${openA.length?`<div class="panel" style="border-color:var(--bad)"><div class="row sp"><b style="color:var(--bad)">${openA.length} alert${openA.length>1?'s':''} from spots</b><button class="btn sm" data-act="tab" data-tab="act">View alerts</button></div>${openA.slice(0,3).map(a=>`<div class="small">${fmtT(a.t)} · ${esc(spotLabel(a.spotId))} · <b>${esc(a.type)}</b> ${esc(a.msg||'')}</div>`).join('')}</div>`:''}
+  </div>
+  <div class="sec"><div class="sec-h"><h2>Race board</h2><span class="muted small">Cells show arrival time at each clue's spot. Tap a team to correct times.</span></div>${boardTable(rows,true)}</div>
+  <div class="two"><div class="sec"><div class="sec-h"><h2>Spot watch</h2><span class="muted small">${noVol?`<span class="pill warn">${noVol} without volunteer</span>`:''}</span></div>
+   <div class="spotgrid">${S.spots.filter(s=>usedSpots.has(s.id)||true).map(s=>{const st=stepsAtSpot(s.id);const heading=st.filter(x=>{const p=progress(x.t);return isLive()&&!x.t.withdrawn&&p.next===x.step}).length;
+     const done=st.filter(x=>(x.t.checkins||{})[x.step]?.t).length;const al=openA.some(a=>a.spotId===s.id);
+     return `<div class="spot ${al?'alert':heading?'hot':''}"><span class="no">SPOT ${pad(s.no)}${s.volunteer?'':' · <span style="color:var(--warn)">no volunteer</span>'}</span><b>${esc(s.name)}</b>
+      <span class="small muted">${st.length?`${done}/${st.length} arrivals${heading?` · <b style="color:var(--warn)">${heading} heading here</b>`:''}`:'Not on any route'}</span></div>`}).join('')||'<div class="empty">No spots yet.</div>'}</div></div>
+   <div class="sec"><div class="sec-h"><h2>Latest</h2><button class="btn sm" data-act="tab" data-tab="act">Full log</button></div><div class="panel">${feed(S.log.slice(0,10))}</div></div></div>`}
+
+function feed(items){if(!items.length)return '<p class="muted small" style="margin:0">Nothing logged yet.</p>';
+  return `<ul class="feed">${items.map(l=>`<li><time>${fmtT(l.t)}</time><span>${l.type==='arrival'?'<span class="pill ok">Arrival</span> ':l.type==='lifeline'?'<span class="pill gold">Lifeline</span> ':l.type==='alert'?'<span class="pill bad">Alert</span> ':l.type==='undo'?'<span class="pill warn">Correction</span> ':''}${esc(l.text)}</span></li>`).join('')}</ul>`}
+
+function aTeams(){const ts=[...S.teams].sort((a,b)=>String(a.code).localeCompare(String(b.code),undefined,{numeric:true}));
+  return `<div class="sec"><div class="sec-h"><h2>Teams</h2><div class="row"><span class="muted small">${ts.length} registered${S.meta.maxTeams?` of ${S.meta.maxTeams}`:''}</span><button class="btn pri" data-act="editTeam">Register a team</button></div></div>
+  ${ts.length?`<div class="grid">${ts.map(t=>{const p=progress(t);const cap=(t.players||[])[t.captain||0]||{};const iss=routeIssues(t);
+    return `<article class="card"><div class="row sp"><span class="tname"><span class="sw" style="--c:${t.color}"></span><h3>${esc(t.name)}</h3></span><span class="pill">${esc(t.code||'')}</span></div>
+    <div class="small"><b>Captain:</b> ${esc(cap.name||'—')} ${cap.phone?`· <span class="mono">${esc(cap.phone)}</span>`:''}</div>
+    <div class="small muted">${(t.players||[]).map(x=>x&&x.name).filter(Boolean).map(esc).join(' · ')||'No players added'}</div>
+    <ul class="chips">${route(t).map((r,i)=>{const s=spotById(r.spotId);return `<li title="${esc(s?s.name:'')}"><b>${i+1}</b>${s?esc(s.name):'<span style="color:var(--warn)">not set</span>'}</li>`}).join('')}</ul>
+    ${iss.map(x=>`<div class="warnline">⚠ ${esc(x)}</div>`).join('')}
+    <div class="row sp"><span class="small muted">${p.solved}/${N()} solved · ${LL()-llUsed(t)} lifelines left${t.withdrawn?' · <b>Withdrawn</b>':''}</span>
+    <span class="row"><button class="btn sm" data-act="progress" data-id="${t.id}">Progress</button><button class="btn sm" data-act="editTeam" data-id="${t.id}">Edit</button></span></div></article>`}).join('')}</div>`:'<div class="empty">No teams yet. Register your first team to start building routes.</div>'}</div>`}
+
+function aSpots(){const sp=S.spots;
+  return `<div class="sec"><div class="sec-h"><h2>Spots & volunteers</h2><button class="btn pri" data-act="editSpot">Add a spot</button></div>
+  <p class="muted small" style="margin:0">Each volunteer signs in with their spot's PIN and sees only the teams routed through that spot, with the clue number to hand over.</p>
+  ${sp.length?`<div class="tablewrap"><table><thead><tr><th>No.</th><th>Spot</th><th>Volunteer</th><th>Phone</th><th>PIN</th><th>Clue & hint</th><th>Teams here (clue #)</th><th></th></tr></thead><tbody>
+  ${sp.map(s=>{const st=stepsAtSpot(s.id);const byStep={};st.forEach(x=>{(byStep[x.step]=byStep[x.step]||[]).push(x.t)});
+    const crowd=Object.entries(byStep).filter(([k,v])=>v.length>2);
+    return `<tr><td class="num">${pad(s.no)}</td><td><b>${esc(s.name)}</b>${s.area?`<div class="small muted">${esc(s.area)}</div>`:''}</td>
+    <td>${s.volunteer?esc(s.volunteer):'<span class="pill warn">Unassigned</span>'}${s.volunteer2?`<div class="small muted">+ ${esc(s.volunteer2)}</div>`:''}</td>
+    <td class="mono small">${esc(s.phone||'')}</td><td class="mono">${esc(s.pin||'')}</td><td class="small">${s.clue?'<span class="pill ok">Clue</span>':'<span class="pill warn">No clue</span>'} ${s.hint?'<span class="pill ok">Hint</span>':'<span class="pill warn">No hint</span>'}</td>
+    <td><ul class="chips">${st.sort((a,b)=>a.step-b.step).map(x=>`<li><span class="sw" style="--c:${x.t.color};width:8px;height:8px"></span> ${esc(x.t.name)} <b>clue #${x.step}</b></li>`).join('')||'<li class="muted">None</li>'}</ul>
+    ${crowd.map(([k,v])=>`<div class="warnline small">${v.length} teams arrive here as clue #${k}; consider staggering.</div>`).join('')}</td>
+    <td class="r"><button class="btn sm" data-act="editSpot" data-id="${s.id}">Edit</button></td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty">No spots yet.</div>'}</div>`}
+
+function aLife(){const ts=ranked();const hist=S.teams.flatMap(t=>llList(t).filter(Boolean).map(l=>({t,l}))).sort((a,b)=>b.l.t-a.l.t);
+  const reqs=S.alerts.filter(a=>!a.resolved&&a.kind==='hint');
+  return `${reqs.length?`<div class="sec"><div class="sec-h"><h2>Hint requests waiting</h2></div>${reqs.map(a=>{const t=teamById(a.teamId);return `<div class="card" style="border-color:var(--gold)"><div class="row sp"><b>${esc(t?t.name:'Team')} · clue #${a.clue}</b><span class="num small">${fmtT(a.t)}</span></div><div class="small">${esc(spotLabel(a.spotId))}${a.by?' · '+esc(a.by):''}${a.msg?' · '+esc(a.msg):''}</div><div class="row">${t?`<button class="btn sm gold" data-act="hint" data-id="${t.id}" data-alert="${a.id}">Send hint</button>`:''}<button class="btn sm" data-act="resolve" data-id="${a.id}">Reply without hint</button></div></div>`}).join('')}</div>`:''}<div class="sec"><div class="sec-h"><h2>Lifelines</h2><span class="muted small">When a team calls in, open their current clue and read out the hint. One lifeline is used per hint.</span></div>
+  ${ts.length?`<div class="tablewrap"><table><thead><tr><th>Team</th><th>Solving</th><th>Lifelines left</th><th></th></tr></thead><tbody>
+  ${ts.map(({t,p})=>{const left=LL()-llUsed(t);return `<tr><td><span class="tname"><span class="sw" style="--c:${t.color}"></span>${esc(t.name)}</span></td>
+   <td>${p.finished?'<span class="pill ok">Finished</span>':`Clue <b class="num">#${p.next}</b> <span class="muted small">→ ${esc(spotLabel(route(t)[p.next-1].spotId))}</span>`}</td>
+   <td>${dots(t)} <span class="num small">${left}/${LL()}</span></td>
+   <td class="r"><button class="btn sm ${left&&!p.finished?'gold':''}" data-act="hint" data-id="${t.id}" ${p.finished?'disabled':''}>${left?'Give hint':'View clue'}</button></td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty">No teams yet.</div>'}</div>
+  <div class="sec"><div class="sec-h"><h2>Lifeline history</h2></div>${hist.length?`<div class="tablewrap"><table><thead><tr><th>Time</th><th>Team</th><th>Clue</th><th>Note</th><th></th></tr></thead><tbody>
+  ${hist.map(({t,l})=>`<tr><td class="num">${fmtT(l.t)}</td><td><span class="tname"><span class="sw" style="--c:${t.color}"></span>${esc(t.name)}</span></td><td class="num">#${l.clue}</td><td class="small">${esc(l.note||'')}</td>
+  <td class="r"><button class="btn sm danger" data-act="undoLL" data-id="${t.id}" data-slot="${l.slot}" data-confirm="Tap again to return it">Return lifeline</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No lifelines used yet.</div>'}</div>`}
+
+function aAct(){const open=S.alerts.filter(a=>!a.resolved),closed=S.alerts.filter(a=>a.resolved).slice(0,10);
+  return `<div class="two"><div class="sec"><div class="sec-h"><h2>Requests & alerts from spots</h2></div>
+   ${open.length?open.map(a=>`<div class="card" style="border-color:var(--bad)"><div class="row sp"><b>${esc(a.type)}</b><span class="num small">${fmtT(a.t)}</span></div>
+     <div>${esc(spotLabel(a.spotId))}${a.by?` · ${esc(a.by)}`:''}</div>${a.msg?`<div class="muted">${esc(a.msg)}</div>`:''}
+     ${a.kind==='hint'&&teamById(a.teamId)?`<div class="small">${esc(teamById(a.teamId).name)} · clue #${a.clue} · ${dots(teamById(a.teamId))} ${LL()-llUsed(teamById(a.teamId))} left</div>`:''}
+     <div class="row">${a.kind==='hint'?`<button class="btn sm gold" data-act="hint" data-id="${a.teamId}" data-alert="${a.id}">Send hint</button>`:''}<button class="btn sm ${a.kind==='hint'?'':'pri'}" data-act="resolve" data-id="${a.id}">${a.kind==='hint'?'Reply without hint':'Resolve with note'}</button></div></div>`).join(''):'<div class="empty">No open alerts.</div>'}
+   ${closed.length?`<details><summary class="small muted">Resolved (${closed.length})</summary><ul class="feed">${closed.map(a=>`<li><time>${fmtT(a.t)}</time><span>${esc(spotLabel(a.spotId))} · ${esc(a.type)} ${esc(a.msg||'')}${a.reply?` → <b>${esc(a.reply.hint!=null?'Hint sent: '+a.reply.hint:a.reply.note||'Resolved')}</b>`:''}${a.ack?' <span class="pill ok">Seen</span>':''}</span></li>`).join('')}</ul></details>`:''}
+   <form class="panel" data-form="broadcast" style="display:grid;gap:10px"><h3 style="font-size:19px">Message all volunteers</h3>
+    <p class="small muted" style="margin:0">Shows as a banner on every volunteer's screen until you clear it.</p>
+    <textarea id="bc-msg" placeholder="e.g. Rain at Manek Chowk. Hold teams under the arcade for 10 minutes.">${esc(S.meta.broadcast?.msg||'')}</textarea>
+    <div class="row"><button class="btn pri" type="submit">Send to volunteers</button>${S.meta.broadcast?.msg?'<button class="btn" type="button" data-act="clearBc">Clear banner</button>':''}</div></form></div>
+  <div class="sec"><div class="sec-h"><h2>Activity log</h2><span class="muted small">Last ${S.log.length} entries</span></div><div class="panel">${feed(S.log)}</div></div></div>`}
+
+function aSet(){const m=S.meta;const st=m.status||'setup';
+  return `<div class="two"><form class="sec panel" data-form="settings"><h2 style="font-size:22px">Event details</h2>
+   <div class="fgrid"><label class="f">Event name<input type="text" id="set-name" value="${esc(m.name||'')}"></label>
+   <label class="f">Date<input type="date" id="set-date" value="${esc(m.date||'')}"></label>
+   <label class="f">Series / edition<input type="text" id="set-series" value="${esc(m.series||'')}" placeholder="e.g. Zonal Meet 1.0"></label>
+   <label class="f">Start time<input type="time" id="set-stime" value="${esc(m.startTime||'')}"></label>
+   <label class="f">Venue<input type="text" id="set-venue" value="${esc(m.venue||'')}"></label>
+   <label class="f">Start point<input type="text" id="set-spoint" value="${esc(m.startPoint||'')}" placeholder="Where teams collect clue #1"></label>
+   <label class="f" style="grid-column:1/-1">Presented by<input type="text" id="set-presenter" value="${esc(m.presenter||'')}"></label>
+   <label class="f" style="grid-column:1/-1">Tagline<input type="text" id="set-tagline" value="${esc(m.tagline||'')}"></label>
+   <label class="f">Motto<input type="text" id="set-motto" value="${esc(m.motto||'')}"></label>
+   <label class="f" style="grid-column:1/-1">Hosted by (one per line)<textarea id="set-hosts">${esc(m.hosts||'')}</textarea></label>
+   <label class="f">Finish point<input type="text" id="set-finish" value="${esc(m.finish||'')}" placeholder="Where teams report after the last clue"></label>
+   <label class="f">Control room phone<input type="tel" id="set-phone" value="${esc(m.phone||'')}"></label>
+   <label class="f">Backup phone<input type="tel" id="set-phone2" value="${esc(m.phone2||'')}"></label>
+   <label class="f">Admin PIN<input type="text" id="set-pin" value="${esc(m.adminPin||'')}" inputmode="numeric"></label>
+   <label class="f">Clues to finish<input type="number" id="set-clues" min="1" max="15" value="${N()}"></label>
+   <label class="f">Lifelines per team<input type="number" id="set-ll" min="0" max="10" value="${LL()}"></label>
+   <label class="f">Team limit<input type="number" id="set-max" min="1" max="100" value="${esc(m.maxTeams||16)}"></label></div>
+   <div><button class="btn pri" type="submit">Save details</button></div></form>
+  <div class="sec"><div class="panel" style="display:grid;gap:10px"><h3 style="font-size:19px">Event clock</h3>
+    <div class="small">Status: <b>${st==='live'?'Live':st==='ended'?'Ended':'Not started'}</b>${m.startedAt?` · started ${fmtT(m.startedAt)}`:''}${m.endedAt?` · ended ${fmtT(m.endedAt)}`:''}</div>
+    <div class="row">${st!=='live'?`<button class="btn gold" data-act="start">${m.startedAt?'Resume (keep start time)':'Start the hunt now'}</button>`:`<button class="btn danger" data-act="end" data-confirm="Tap again to end the hunt">End the hunt</button>`}</div>
+    <label class="f">Correct the start time<span class="row"><input type="time" id="set-start" style="max-width:150px" value="${m.startedAt?fmtHM(m.startedAt):''}"><button class="btn sm" type="button" data-act="setStart">Apply</button></span></label></div>
+   <div class="panel" style="display:grid;gap:10px"><h3 style="font-size:19px">Results & data</h3>
+    <p class="small muted" style="margin:0">Download standings with every arrival time and lifeline, as a spreadsheet file (CSV).</p>
+    <div class="row"><button class="btn" data-act="csv">Download results CSV</button></div>
+    <textarea id="csv-out" hidden readonly style="min-height:120px;font-family:var(--mono);font-size:12px"></textarea>
+    <hr style="border:0;border-top:1px solid var(--line);width:100%">
+    <p class="small muted" style="margin:0">Use after a rehearsal: clears every arrival and lifeline, and resets the clock. Teams, routes and spots stay.</p>
+    <div><button class="btn danger" data-act="reset" data-confirm="Tap again to clear all progress">Reset all progress</button></div></div>
+   <div class="panel small muted">PINs keep people on the right screen; they aren't strong security. Share this page only with your organising team and volunteers.</div></div></div>`}
+
+/* ---------- volunteer ---------- */
+function vVol(){const s=spotById(S.spotId);if(!s)return `<div class="empty">This spot no longer exists. <button class="btn sm" data-act="logout">Choose again</button></div>`;
+  const items=stepsAtSpot(s.id).map(x=>{const p=progress(x.t);const c=(x.t.checkins||{})[x.step];
+    const state=c&&c.t?'arrived':x.t.withdrawn?'out':p.next===x.step&&isLive()?'here':p.next!=null&&p.next<x.step?'later':'passed';return {...x,p,c,state}});
+  const order={here:0,later:1,arrived:2,passed:3,out:4};items.sort((a,b)=>order[a.state]-order[b.state]||a.step-b.step||(b.c?.t||0)-(a.c?.t||0));
+  const n=(k)=>items.filter(i=>i.state===k).length;
+  return `<div class="sec"><div class="vhead"><span class="no">SPOT ${pad(s.no)}</span><h2>${esc(s.name)}</h2>
+   <span class="muted">${esc(s.volunteer||'Volunteer')}${s.volunteer2?' & '+esc(s.volunteer2):''}${s.area?' · '+esc(s.area):''}</span></div>
+   ${!isLive()?`<div class="panel small">${S.meta.status==='ended'?'The hunt has ended. Thank you!':'The hunt has not started yet. Teams below will reach you once the control room starts the clock.'}</div>`:''}
+   <div class="row"><span class="pill gold">${n('here')} heading here now</span><span class="pill">${n('later')} still to come</span><span class="pill ok">${n('arrived')} arrived</span></div>
+   ${contactCard()}
+   ${volMsgs()}
+   ${s.notes?`<div class="panel small"><b>Note from control room:</b> ${esc(s.notes)}</div>`:''}
+   ${items.length?`<div class="tablewrap"><table><thead><tr><th>Team</th><th class="c">Arrives with</th><th class="c">You hand over</th><th>Status</th></tr></thead><tbody>
+    ${[...items].sort((a,b)=>a.step-b.step).map(x=>`<tr><td><span class="tname"><span class="sw" style="--c:${x.t.color}"></span>${esc(x.t.name)}</span></td><td class="c num"><b>#${x.step}</b></td>
+     <td class="c num">${x.step===N()?'<span class="pill ok">Finish</span>':`<b>#${x.step+1}</b>`}</td><td>${x.state==='arrived'?`<span class="pill ok">${fmtT(x.c.t)}</span>`:x.state==='here'?'<span class="pill gold">Coming now</span>':'<span class="pill">Waiting</span>'}</td></tr>`).join('')}
+   </tbody></table></div>`:''}
+  </div>
+  <div class="sec">${items.length?items.map(volCard).join(''):'<div class="empty">No team is routed through this spot yet. The control room assigns routes.</div>'}</div>
+  <div class="sec">${contactCard(true)}</div>`}
+function telHref(n){return 'tel:'+String(n).replace(/[^\d+]/g,'')}
+function contactCard(compact){const ph=[S.meta.phone,S.meta.phone2].filter(Boolean);
+  return `<div class="contact"><div class="row sp"><div><div class="small" style="color:var(--gold);letter-spacing:.08em;text-transform:uppercase;font-weight:700">Control room</div>
+   ${ph.length?ph.map(n=>`<div class="ph">${esc(n)}</div>`).join(''):'<div class="small">Phone number not added yet. Send an alert instead.</div>'}</div>
+   <div class="row">${ph.map((n,i)=>`<a class="btn ${i?'':'gold'}" href="${esc(telHref(n))}">Call${ph.length>1?(i?' backup':' main'):''}</a><button class="btn sm" data-act="copy" data-text="${esc(n)}">Copy</button>`).join('')}</div></div>
+   ${compact?'':`<div class="row"><button class="btn pri" data-act="reqHint">Request a hint</button><button class="btn danger" data-act="sos">Send alert</button></div>`}</div>`}
+function volMsgs(){const mine=S.alerts.filter(a=>a.spotId===S.spotId);if(!mine.length)return '';
+  const fresh=mine.filter(a=>a.resolved&&a.reply&&!a.ack),wait=mine.filter(a=>!a.resolved),done=mine.filter(a=>a.resolved&&!(a.reply&&!a.ack)).slice(0,8);
+  const tn=a=>a.teamId&&teamById(a.teamId)?teamById(a.teamId).name:'';
+  return `${fresh.map(a=>a.reply.hint!=null?`<div class="msg hint"><span class="lbl">Hint from control room · ${esc(tn(a))} · clue #${a.clue} · ${fmtT(a.reply.t)}</span>
+     <div class="body">${esc(a.reply.hint||a.reply.note||'(No hint text)')}</div>${a.reply.hint&&a.reply.note?`<div class="small"><b>Note:</b> ${esc(a.reply.note)}</div>`:''}
+     <div><button class="btn pri" data-act="ack" data-id="${a.id}">Shared with the team</button></div></div>`:
+    `<div class="msg"><span class="lbl">Control room replied · ${esc(a.type)}${tn(a)?' · '+esc(tn(a)):''} · ${fmtT(a.reply.t)}</span>
+     <div class="body">${esc(a.reply.note||'Resolved.')}</div><div><button class="btn pri" data-act="ack" data-id="${a.id}">Got it</button></div></div>`).join('')}
+  ${wait.map(a=>`<div class="msg wait"><span class="lbl" style="color:var(--ink2)">Waiting for control room · sent ${fmtT(a.t)}</span><div>${esc(a.type)}${tn(a)?' · '+esc(tn(a)):''}${a.clue?' · clue #'+a.clue:''}${a.msg?' · '+esc(a.msg):''}</div></div>`).join('')}
+  ${done.length?`<details><summary class="small muted">Earlier messages (${done.length})</summary><ul class="feed">${done.map(a=>`<li><time>${fmtT(a.t)}</time><span>${esc(a.type)}${tn(a)?' · '+esc(tn(a)):''}${a.reply?(a.reply.hint!=null?' · Hint: '+esc(a.reply.hint):' · '+esc(a.reply.note||'')):' · Resolved'}</span></li>`).join('')}</ul></details>`:''}`}
+function volCard(x){const {t,step,c,state}=x;const rt=route(t);const nextClue=rt[step];const last=step===N();
+  const status=state==='arrived'?`<span class="pill ok">Arrived ${fmtT(c.t)}</span>`:state==='here'?'<span class="pill gold live">Solving your clue now</span>':state==='later'?`<span class="pill">On clue #${x.p.next}</span>`:state==='out'?'<span class="pill">Withdrawn</span>':'<span class="pill warn">Skipped this spot?</span>';
+  const canUndo=state==='arrived'&&c.by===S.spotId&&Date.now()-(c.at||c.t)<10*60e3;
+  const hand=state==='arrived'?(last?`<div class="handover"><span class="lbl">Final spot</span><p><b>${esc(t.name)} has finished the hunt.</b> Send them to ${esc(S.meta.finish||'the finish point')}.</p></div>`:
+    `<div class="handover"><span class="lbl">Hand over clue #${step+1}</span><p>${clueOf(t,step+1)?esc(clueOf(t,step+1)):'<span class="muted">No clue text entered. Use the physical card numbered #'+(step+1)+' for this team.</span>'}</p></div>`):'';
+  return `<article class="vteam ${state==='here'?'here':''}" style="--c:${t.color}">
+   <div class="row sp"><div><h3>${esc(t.name)}</h3><span class="small muted">${esc(t.code||'')} · captain ${esc(((t.players||[])[t.captain||0]||{}).name||'—')}</span></div>
+   <div style="text-align:right"><div class="small muted">${dots(t)}</div><div class="small muted">Arrives with</div><div class="bigclue">#${step}</div></div></div>
+   <div class="row sp">${status}${state==='here'||(state!=='arrived'&&state!=='out'&&x.p.next===step)?`<button class="btn pri" data-act="arrive" data-id="${t.id}" data-step="${step}">Mark arrived</button>`:''}${state==='later'?'<span class="pill">Locked</span>':''}${!x.p.finished&&!t.withdrawn&&(state==='arrived'||state==='passed')?`<button class="btn sm gold" data-act="reqHint" data-id="${t.id}">Request hint · clue #${x.p.next}</button>`:''}${canUndo?`<button class="btn sm danger" data-act="volUndo" data-id="${t.id}" data-step="${step}" data-confirm="Tap again to undo">Undo</button>`:''}</div>
+   ${state==='later'?`<div class="handover" style="background:var(--warn-soft)"><span class="lbl" style="color:var(--warn)">Can't mark arrival yet</span>
+    <p>${esc(t.name)} has not solved clue #${x.p.next} yet. Don't hand over any clue. Ask them to keep solving and let the control room know.</p>
+    <div><button class="btn sm" data-act="outOfOrder" data-id="${t.id}" data-step="${step}">Tell control room they came early</button></div></div>`:''}
+   ${hand}</article>`}
+
+/* ---------- scoreboard ---------- */
+function vBoard(){const rows=ranked();
+  return `${logoBand('all')}<div class="sec" style="margin-top:22px"><div class="sec-h"><h2>Standings</h2><span class="muted small">${rows.filter(r=>r.p.finished).length} of ${rows.length} teams finished · updates live</span></div>
+  <div class="lb">${rows.map((r,i)=>{const {t,p}=r;return `<div class="lbrow ${i===0&&p.finished?'r1':''}"><div class="rk">${i+1}</div>
+   <div style="min-width:0"><div class="tname"><span class="sw" style="--c:${t.color}"></span><span style="overflow:hidden;text-overflow:ellipsis">${esc(t.name)}</span>${p.finished?'<span class="pill ok">Finished</span>':''}</div>
+   <div class="pips">${range(N()).map(k=>`<i class="${(t.checkins||{})[k]?.t?'on':p.next===k&&isLive()?'nx':''}"></i>`).join('')}</div></div>
+   <div class="tm">${timeCell(t,p)}<div class="small muted">${p.solved}/${N()} · ${dots(t)}</div></div></div>`}).join('')||'<div class="empty">No teams yet.</div>'}</div></div>`}
+
+/* ---------- modal ---------- */
+function openModal(title,body,foot){const m=$('#modal');m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sheet-h"><h2>${esc(title)}</h2><button class="x" data-act="close" aria-label="Close">×</button></div><div class="sheet-b">${body}</div>${foot?`<div class="sheet-f">${foot}</div>`:''}</div>`;m.hidden=false;
+  const f=m.querySelector('input:not([type=hidden]):not([type=radio]),textarea,select');if(f)setTimeout(()=>f.focus(),30)}
+function closeModal(){const m=$('#modal');m.hidden=true;m.innerHTML='';if(S.pending){S.pending=false;render()}}
+$('#modal').addEventListener('mousedown',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
+
+function teamModal(id){const t=id?teamById(id):null;const nextNo=S.teams.length+1;
+  const used=new Set(S.teams.map(x=>x.color));const col=t?t.color:COLORS.find(c=>!used.has(c))||COLORS[0];
+  const pl=t?.players||[];const rt=t?route(t):range(N()).map(()=>({}));const cap=t?.captain||0;
+  const opt=(sel,step)=>`<option value="">Choose spot…</option>`+S.spots.map(s=>{const n=stepsAtSpot(s.id).filter(x=>x.step===step&&x.t.id!==id).length;return `<option value="${s.id}" ${sel===s.id?'selected':''}>${pad(s.no)} · ${esc(s.name)}${n?` (${n} other team${n>1?'s':''} at #${step})`:''}</option>`}).join('');
+  openModal(t?`Edit ${t.name}`:'Register a team',`<form id="teamForm" data-form="team" data-id="${id||''}" style="display:grid;gap:14px">
+   <div class="fgrid"><label class="f">Team name<input type="text" id="tm-name" value="${esc(t?.name||'')}" required></label>
+   <label class="f">Team code<input type="text" id="tm-code" value="${esc(t?.code||'T'+pad(nextNo))}"></label>
+   <label class="f">Own start time (optional)<input type="time" id="tm-start" value="${t?.startAt?fmtHM(t.startAt):''}"></label></div>
+   <div class="f" style="font-size:13px;font-weight:600;color:var(--ink2)">Team colour<div class="swatches">${COLORS.map(c=>`<label title="${c}"><input type="radio" name="tm-color" value="${c}" ${c===col?'checked':''}><span style="--c:${c}"></span></label>`).join('')}</div></div>
+   <fieldset><legend>Players</legend>${range(4).map(i=>`<div class="fgrid" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;align-items:end">
+     <label class="f">Player ${i}<input type="text" id="tm-p${i}" value="${esc(pl[i-1]?.name||'')}"></label>
+     <label class="f">Phone<input type="tel" id="tm-ph${i}" value="${esc(pl[i-1]?.phone||'')}"></label>
+     <label class="small" style="display:flex;gap:4px;align-items:center;padding-bottom:8px"><input type="radio" name="tm-cap" value="${i-1}" ${cap===i-1?'checked':''}> Captain</label></div>`).join('')}</fieldset>
+   <fieldset><legend>Route: ${N()} clues</legend><p class="small muted" style="margin:0">Clue #n leads the team to spot n. Clue #1 is handed out at the start; the volunteer at spot n hands over clue #n+1. Clue text and hints come from the spot. Fill these only if this team needs a different one.</p>
+   ${range(N()).map(i=>`<div class="routerow"><span class="n">${i}</span><div class="ins"><select id="tm-s${i}">${opt(rt[i-1].spotId,i)}</select>
+     <textarea id="tm-c${i}" placeholder="Optional. Leave blank to use the spot's clue" style="min-height:48px">${esc(rt[i-1].clue||'')}</textarea>
+     <input type="text" id="tm-h${i}" placeholder="Optional. Leave blank to use the spot's hint" value="${esc(rt[i-1].hint||'')}"></div></div>`).join('')}</fieldset>
+   ${t?`<label class="small" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="tm-wd" ${t.withdrawn?'checked':''}> Team withdrawn (hidden from standings)</label>`:''}
+   <span class="err" id="tm-err"></span></form>`,
+   `${t?`<button class="btn danger" data-act="delTeam" data-id="${id}" data-confirm="Tap again to delete" style="margin-right:auto">Delete team</button>`:''}<button class="btn" data-act="close">Cancel</button><button class="btn pri" type="submit" form="teamForm">${t?'Save team':'Register team'}</button>`)}
+
+function spotModal(id){const s=id?spotById(id):null;const no=s?s.no:(Math.max(0,...S.spots.map(x=>+x.no||0))+1);
+  openModal(s?`Spot ${pad(s.no)}`:'Add a spot',`<form id="spotForm" data-form="spot" data-id="${id||''}" style="display:grid;gap:12px">
+   <div class="fgrid"><label class="f">Spot number<input type="number" id="sp-no" value="${no}" min="1"></label>
+   <label class="f" style="grid-column:span 2">Spot name<input type="text" id="sp-name" value="${esc(s?.name||'')}" required></label></div>
+   <label class="f">Area or landmark<input type="text" id="sp-area" value="${esc(s?.area||'')}" placeholder="e.g. Near Teen Darwaza, Bhadra"></label>
+   <div class="fgrid"><label class="f">Volunteer<input type="text" id="sp-vol" value="${esc(s?.volunteer||'')}"></label>
+   <label class="f">Volunteer phone<input type="tel" id="sp-ph" value="${esc(s?.phone||'')}"></label>
+   <label class="f">Backup volunteer<input type="text" id="sp-vol2" value="${esc(s?.volunteer2||'')}"></label>
+   <label class="f">Spot PIN<input type="text" id="sp-pin" inputmode="numeric" value="${esc(s?.pin||String(1000+no))}"></label></div>
+   <label class="f">Clue text that leads here<textarea id="sp-clue" placeholder="Same clue for every team that comes to this spot">${esc(s?.clue||'')}</textarea></label>
+   <label class="f">Hint for this spot<textarea id="sp-hint" placeholder="Sent automatically when a team uses a lifeline on the clue for this spot">${esc(s?.hint||'')}</textarea></label>
+   <label class="f">Note for the volunteer<textarea id="sp-notes" placeholder="Where to stand, what to watch for">${esc(s?.notes||'')}</textarea></label>
+   <fieldset><legend>Teams & clue numbers at this spot</legend>
+    <p class="small muted" style="margin:0">Several teams can come here, each with its own clue number. Example: Team 1 arrives with clue #2, Team 2 with clue #7. This updates each team's route.</p>
+    <div id="sp-asg" style="display:grid;gap:8px">${(id?stepsAtSpot(id).sort((a,b)=>a.step-b.step):[]).map(x=>asgRow(x.t.id,x.step,id)).join('')}</div>
+    <div><button class="btn sm" type="button" data-act="addAsg" data-spot="${id||''}">+ Add a team</button></div></fieldset>
+   <span class="err" id="sp-err"></span></form>`,
+   `${s?`<button class="btn danger" data-act="delSpot" data-id="${id}" data-confirm="Tap again to delete" style="margin-right:auto">Delete spot</button>`:''}<button class="btn" data-act="close">Cancel</button><button class="btn pri" type="submit" form="spotForm">Save spot</button>`)}
+
+function asgNote(teamId,step,spotId){const t=teamById(teamId);if(!t||!step)return '';const cur=route(t)[step-1].spotId;
+  const other=route(t).findIndex(r=>r.spotId===spotId);let n='';
+  if(cur&&cur!==spotId)n=`Replaces ${spotLabel(cur)} as clue #${step}.`;
+  if(other>=0&&other+1!==step)n+=` Moves from clue #${other+1}.`;
+  if((t.checkins||{})[step]?.t)n+=' This clue already has an arrival recorded.';return n.trim()}
+function asgRow(teamId,step,spotId){const ts=[...S.teams].sort((a,b)=>String(a.code).localeCompare(String(b.code),undefined,{numeric:true}));
+  return `<div class="asg" style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto;gap:8px;align-items:center">
+   <select class="sa-team" aria-label="Team"><option value="">Choose team…</option>${ts.map(t=>`<option value="${t.id}" ${t.id===teamId?'selected':''}>${esc(t.code?t.code+' · ':'')}${esc(t.name)}</option>`).join('')}</select>
+   <select class="sa-step" aria-label="Clue number"><option value="">Clue #…</option>${range(N()).map(i=>`<option value="${i}" ${i===step?'selected':''}>Clue #${i}</option>`).join('')}</select>
+   <button class="btn sm" type="button" data-act="rmAsg" aria-label="Remove">✕</button>
+   <span class="sa-note warnline small" style="grid-column:1/-1">${esc(asgNote(teamId,step,spotId))}</span></div>`}
+document.addEventListener('change',e=>{const r=e.target.closest('.asg');if(!r)return;const f=r.closest('form');
+  r.querySelector('.sa-note').textContent=asgNote(r.querySelector('.sa-team').value,+r.querySelector('.sa-step').value,f.dataset.id)});
+function progressModal(id){const t=teamById(id);if(!t)return;const rt=route(t);const ck=t.checkins||{};
+  openModal(t.name,`<div class="row"><span class="sw" style="--c:${t.color}"></span><span class="muted">${esc(t.code||'')} · ${progress(t).solved}/${N()} solved · ${dots(t)} ${LL()-llUsed(t)} lifelines left</span></div>
+  <div>${range(N()).map(i=>{const c=ck[i];return `<div class="steprow"><span class="num" style="font-weight:700;color:var(--teal)">#${i}</span>
+   <div><b>${esc(spotLabel(rt[i-1].spotId))}</b><div class="small muted">${c&&c.t?`Arrived ${fmtT(c.t)}${c.byName?' · logged by '+esc(c.byName):''}`:'Not arrived'}</div></div>
+   <span class="row">${c&&c.t?`<button class="btn sm danger" data-act="clearCk" data-id="${id}" data-step="${i}" data-confirm="Tap again">Clear</button>`:''}<button class="btn sm" data-act="arrive" data-id="${id}" data-step="${i}" data-admin="1">${c&&c.t?'Edit time':'Mark arrived'}</button></span></div>`}).join('')}</div>`,
+  `<button class="btn" data-act="editTeam" data-id="${id}">Edit team & route</button><button class="btn pri" data-act="close">Done</button>`)}
+
+function arriveModal(id,step,admin){const t=teamById(id);const rt=route(t);const p=progress(t);const c=(t.checkins||{})[step];
+  const gaps=range(step-1).filter(i=>!(t.checkins||{})[i]?.t);
+  openModal(`${t.name} · clue #${step}`,`<form id="arrForm" data-form="arrive" data-id="${id}" data-step="${step}" data-admin="${admin?1:''}" style="display:grid;gap:12px">
+   <div><div class="small muted">Spot</div><b>${esc(spotLabel(rt[step-1].spotId))}</b></div>
+   ${gaps.length?`<div class="warnline">No arrival recorded for clue${gaps.length>1?'s':''} #${gaps.join(', #')}. ${admin?'As control room you can still save this (for example if a volunteer forgot to log it).':'Volunteers can only log arrivals in route order.'}</div>`:''}
+   ${!isLive()&&!admin?'<div class="warnline">The hunt clock has not been started by the control room.</div>':''}
+   <label class="f">Arrival time<input type="time" id="ar-time" value="${fmtHM(c?.t||Date.now())}" step="60"></label>
+   <label class="f">Note (optional)<input type="text" id="ar-note" value="${esc(c?.note||'')}" placeholder="e.g. arrived with 3 players"></label></form>`,
+  `<button class="btn" data-act="close">Cancel</button><button class="btn pri" type="submit" form="arrForm">Save arrival</button>`)}
+
+function hintModal(id,alertId){const t=teamById(id);const p=progress(t);const al=alertId&&S.alerts.find(a=>a.id===alertId);const n=(al&&al.clue)||p.next||N();const r=route(t)[n-1];const left=LL()-llUsed(t);
+  openModal(`Lifeline · ${t.name}`,`<form id="hintForm" data-form="hint" data-id="${id}" data-alert="${alertId||''}" style="display:grid;gap:12px">
+   ${al?`<div class="msg" style="border-width:1px"><span class="lbl">Request from ${esc(spotLabel(al.spotId))}${al.by?' · '+esc(al.by):''} · ${fmtT(al.t)}</span>${al.msg?`<div>${esc(al.msg)}</div>`:''}</div>`:''}
+   <div class="row sp"><span>Currently solving <b>clue #${n}</b> → ${esc(spotLabel(r.spotId))}</span><span>${dots(t)} <b class="num">${left}</b> left</span></div>
+   <div class="handover"><span class="lbl">Clue #${n}</span><p>${clueOf(t,n)?esc(clueOf(t,n)):'<span class="muted">No clue text entered.</span>'}</p></div>
+   <div class="handover" style="background:var(--gold-soft)"><span class="lbl" style="color:var(--warn)">Hint for ${esc(spotLabel(r.spotId))}${al?' · sent automatically':''}</span><p>${hintOf(t,n)?esc(hintOf(t,n)):'<span class="muted">No hint saved for this spot. Add it in Spots & volunteers, or type it in the note below.</span>'}</p></div>
+   <input type="hidden" id="hn-hint" value="${esc(hintOf(t,n))}">
+   <label class="f">${al?'Note for the volunteer (optional)':'Note (optional)'}<textarea id="hn-note" style="min-height:56px" placeholder="${al?'e.g. Tell them to look up at the arches':'e.g. Captain called at 11:20'}"></textarea></label>
+   <input type="hidden" id="hn-clue" value="${n}"></form>`,
+  `<button class="btn" data-act="close">Close</button><button class="btn gold" type="submit" form="hintForm" ${left?'':'disabled'}>${left?(al?`Send hint · uses 1 lifeline (${left-1} left)`:`Use lifeline (${left-1} left after)`):'No lifelines left'}</button>${al&&!left?`<button class="btn" data-act="resolve" data-id="${al.id}">Reply without hint</button>`:''}`)}
+
+function reqHintModal(id){const ts=[...S.teams].filter(t=>!t.withdrawn&&!progress(t).finished).sort((a,b)=>String(a.code).localeCompare(String(b.code),undefined,{numeric:true}));
+  const sel=id||'';openModal('Request a hint',`<form id="rhForm" data-form="reqHint" style="display:grid;gap:12px">
+  <p class="small muted" style="margin:0">The control room decides and sends the hint back to this screen. A hint uses one of the team's lifelines.</p>
+  <label class="f">Team<select id="rh-team">${sel?'':'<option value="">Choose team…</option>'}${ts.map(t=>{const p=progress(t);return `<option value="${t.id}" ${t.id===sel?'selected':''}>${esc(t.name)} · stuck on clue #${p.next} · ${LL()-llUsed(t)} lifeline${LL()-llUsed(t)===1?'':'s'} left</option>`}).join('')}</select></label>
+  <label class="f">What has the team tried? (optional)<textarea id="rh-msg" placeholder="e.g. They think it's a temple near Manek Chowk"></textarea></label>
+  <span class="err" id="rh-err"></span></form>`,`<button class="btn" data-act="close">Cancel</button><button class="btn gold" type="submit" form="rhForm">Send hint request</button>`)}
+function resolveModal(id){const a=S.alerts.find(x=>x.id===id);if(!a)return;const t=a.teamId&&teamById(a.teamId);
+  openModal(a.kind==='hint'?'Reply without a hint':'Resolve alert',`<form id="rsForm" data-form="resolve" data-id="${id}" style="display:grid;gap:12px">
+  <div><b>${esc(a.type)}</b> · ${esc(spotLabel(a.spotId))}${t?' · '+esc(t.name):''}${a.clue?' · clue #'+a.clue:''}</div>${a.msg?`<div class="muted">${esc(a.msg)}</div>`:''}
+  <label class="f">Note for the volunteer<textarea id="rs-note" placeholder="${a.kind==='hint'?'e.g. No lifelines left, ask them to keep trying':'e.g. Help is on the way, 5 minutes'}"></textarea></label>
+  <label class="small" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="rs-notify" checked> Show this note on the spot volunteer's screen</label></form>`,
+  `<button class="btn" data-act="close">Cancel</button><button class="btn pri" type="submit" form="rsForm">Mark resolved</button>`)}
+function sosModal(){openModal('Alert the control room',`<form id="sosForm" data-form="sos" style="display:grid;gap:12px">
+  <label class="f">What's happening?<select id="so-type"><option>Need help</option><option>Wrong team arrived</option><option>Team is lost or overdue</option><option>Clue cards missing</option><option>Medical</option><option>Crowd or safety issue</option><option>Other</option></select></label>
+  <label class="f">Details<textarea id="so-msg" placeholder="Which team, what you need"></textarea></label></form>`,
+  `<button class="btn" data-act="close">Cancel</button><button class="btn danger armed" type="submit" form="sosForm">Send alert</button>`)}
+
+/* ---------- actions ---------- */
+function timeToday(hm,base){if(!hm)return null;const [h,m]=hm.split(':').map(Number);const d=new Date(base||Date.now());d.setHours(h,m,0,0);return d.getTime()}
+function armed(btn){if(!btn.dataset.confirm)return true;if(btn.classList.contains('armed'))return true;
+  const old=btn.textContent;btn.classList.add('armed');btn.textContent=btn.dataset.confirm;setTimeout(()=>{btn.classList.remove('armed');btn.textContent=old},3000);return false}
+const ACT={
+  logout(){go(null,{spotId:null,tab:'dash'})},
+  board(){go('board')},
+  tab(b){S.tab=b.dataset.tab;lsSet('hh.session',{role:S.role,spotId:S.spotId,tab:S.tab});render({fresh:true})},
+  close(){closeModal()},
+  addAsg(b){$('#sp-asg').insertAdjacentHTML('beforeend',asgRow('',null,b.dataset.spot))},
+  rmAsg(b){b.closest('.asg').remove()},
+  editTeam(b){teamModal(b.dataset.id)},editSpot(b){spotModal(b.dataset.id)},
+  progress(b){progressModal(b.dataset.id)},arrive(b){arriveModal(b.dataset.id,+b.dataset.step,!!b.dataset.admin)},
+  async outOfOrder(b){const t=teamById(b.dataset.id);const p=progress(t);const s=spotById(S.spotId);const n=+b.dataset.step;
+    if(S.alerts.some(a=>!a.resolved&&a.kind==='early'&&a.teamId===t.id&&a.spotId===S.spotId)){toast('Already reported. Waiting for the control room.');return}
+    if(await save(()=>S.db.collection('alerts').add({t:Date.now(),kind:'early',type:'Team arrived out of order',teamId:t.id,clue:n,spotId:S.spotId,by:s?.volunteer||'',msg:`${t.name} reached this spot (clue #${n}) but has not checked in for clue #${p.next} yet.`,resolved:false}),'Control room informed'))logEv('alert',`${t.name} arrived early at ${spotLabel(S.spotId)} (clue #${n}); still missing clue #${p.next}`,{teamId:t.id,spotId:S.spotId})},
+  hint(b){hintModal(b.dataset.id,b.dataset.alert)},sos(){sosModal()},reqHint(b){reqHintModal(b.dataset.id)},
+  copy(b){const t=b.dataset.text;const done=()=>toast('Copied '+t);try{navigator.clipboard.writeText(t).then(done,()=>toast('Number: '+t))}catch(e){toast('Number: '+t)}},
+  async seed(){const d=window.HH_SEED;if(!d)return;await save(async()=>{for(const [col,docs] of Object.entries(d))for(const [id,v] of Object.entries(docs))await S.db.doc(col+'/'+id).set(v)},'Starting data loaded')},
+  async ack(b){const a=S.alerts.find(x=>x.id===b.dataset.id);if(await save(()=>S.db.doc('alerts/'+b.dataset.id).update({ack:true,ackAt:Date.now()}),'Marked as done')&&a&&a.kind==='hint'){const t=teamById(a.teamId);logEv('lifeline',`${spotLabel(a.spotId)} shared the hint with ${t?t.name:'team'} (clue #${a.clue})`,{spotId:a.spotId,teamId:a.teamId})}},
+  async start(){const ok=await save(()=>saveMeta({status:'live',startedAt:S.meta.startedAt||Date.now(),endedAt:null}),'The hunt is live');if(ok)logEv('event','The hunt started')},
+  async end(){if(await save(()=>saveMeta({status:'ended',endedAt:Date.now()}),'The hunt has ended'))logEv('event','The hunt ended')},
+  async setStart(){const v=$('#set-start').value;if(!v)return;await save(()=>saveMeta({startedAt:timeToday(v,S.meta.startedAt||Date.now())}),'Start time updated')},
+  async delTeam(b){const t=teamById(b.dataset.id);if(await save(()=>S.db.doc('teams/'+b.dataset.id).delete(),'Team deleted')){closeModal();logEv('admin',`Deleted team ${t?.name}`)}},
+  async delSpot(b){const s=spotById(b.dataset.id);if(await save(()=>S.db.doc('spots/'+b.dataset.id).delete(),'Spot deleted')){closeModal();logEv('admin',`Deleted spot ${s?.name}`)}},
+  async clearCk(b){const t=teamById(b.dataset.id),n=+b.dataset.step;if(await save(()=>S.db.doc('teams/'+t.id).update({checkins:{[n]:null}}),'Arrival cleared')){logEv('undo',`Control room cleared ${t.name}'s arrival for clue #${n}`,{teamId:t.id});progressModal(t.id)}},
+  async volUndo(b){const t=teamById(b.dataset.id),n=+b.dataset.step;if(await save(()=>S.db.doc('teams/'+t.id).update({checkins:{[n]:null}}),'Arrival undone'))logEv('undo',`${spotLabel(S.spotId)} undid ${t.name}'s arrival for clue #${n}`,{teamId:t.id,spotId:S.spotId})},
+  async undoLL(b){const t=teamById(b.dataset.id),s=+b.dataset.slot;if(await save(()=>S.db.doc('teams/'+t.id).update({lifelines:{[s]:null}}),'Lifeline returned'))logEv('undo',`Lifeline returned to ${t.name}`,{teamId:t.id})},
+  resolve(b){resolveModal(b.dataset.id)},
+  async clearBc(){await save(()=>saveMeta({broadcast:null}),'Banner cleared')},
+  async reset(){const ok=await save(async()=>{for(const t of S.teams){const {id,...rest}=t;await S.db.doc('teams/'+id).set({...rest,checkins:{},lifelines:{}})}await saveMeta({status:'setup',startedAt:null,endedAt:null})},'All progress cleared');if(ok)logEv('admin','Progress reset')},
+  async csv(){const rows=ranked();const head=['Rank','Code','Team','Captain','Captain phone','Players','Solved','Lifelines used','Start','Finish','Elapsed',...range(N()).map(i=>`Clue ${i} spot`),...range(N()).map(i=>`Clue ${i} arrival`)];
+    const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+    const lines=[head.map(q).join(',')].concat(rows.map((r,i)=>{const t=r.t,p=r.p,cap=(t.players||[])[t.captain||0]||{},st=startOf(t);
+      return [i+1,t.code,t.name,cap.name,cap.phone,(t.players||[]).map(x=>x&&x.name).filter(Boolean).join('; '),p.solved,r.ll,st?fmtT(st):'',p.finished?fmtT(p.last):'',p.finished&&st?fmtDur(p.last-st):'',
+       ...route(t).map(x=>spotLabel(x.spotId)),...range(N()).map(k=>(t.checkins||{})[k]?.t?fmtT(t.checkins[k].t):'')].map(q).join(',')}));
+    const data=lines.join('\n');const fn=`heritage-hunt-results-${new Date().toISOString().slice(0,10)}.csv`;
+    if(S.dl){try{await S.dl.save({filename:fn,data});toast('Results ready');return}catch(e){if(e&&e.code==='declined')return}}
+    const ta=$('#csv-out');ta.hidden=false;ta.value=data;ta.select();toast('Download unavailable here. Copy the CSV from the box.')}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const f=ACT[b.dataset.act];if(!f)return;
+  if(b.tagName==='TR'&&e.target.closest('button'))return;e.preventDefault();if(!armed(b))return;f(b)});
+
+const FORMS={
+  adminLogin(){const pin=$('#lg-apin').value.trim();if(pin===String(S.meta.adminPin||'2026'))go('admin',{tab:S.tab||'dash'});else $('#lg-aerr').textContent='That PIN is not right.'},
+  volLogin(){const id=$('#lg-spot').value,pin=$('#lg-vpin').value.trim();const s=spotById(id);
+    if(!s){$('#lg-verr').textContent='Choose your spot first.';return}if(pin!==String(s.pin||'')){$('#lg-verr').textContent='That PIN does not match this spot.';return}go('vol',{spotId:id})},
+  async team(f){const id=f.dataset.id;const g=k=>(document.getElementById(k)?.value||'').trim();const name=g('tm-name');if(!name){$('#tm-err').textContent='Give the team a name.';return}
+    if(!id&&S.meta.maxTeams&&S.teams.length>=+S.meta.maxTeams){$('#tm-err').textContent=`The team limit (${S.meta.maxTeams}) is reached. Raise it in Settings.`;return}
+    const old=id?teamById(id):{};const players=range(4).map(i=>({name:g('tm-p'+i),phone:g('tm-ph'+i)}));
+    const rt=range(N()).map(i=>({spotId:g('tm-s'+i),clue:g('tm-c'+i),hint:g('tm-h'+i)}));
+    const ids=rt.map(r=>r.spotId).filter(Boolean);if(new Set(ids).size!==ids.length){$('#tm-err').textContent='A spot appears twice in this route. Each clue needs a different spot.';return}
+    const st=g('tm-start');
+    const doc={name,code:g('tm-code'),color:(f.querySelector('input[name=tm-color]:checked')||{}).value||COLORS[0],players,captain:+((f.querySelector('input[name=tm-cap]:checked')||{}).value||0),
+      route:rt,startAt:st?timeToday(st,S.meta.startedAt||Date.now()):null,withdrawn:!!document.getElementById('tm-wd')?.checked,checkins:old.checkins||{},lifelines:old.lifelines||{},createdAt:old.createdAt||Date.now()};
+    const tid=id||('t'+Date.now().toString(36));
+    if(await save(()=>S.db.doc('teams/'+tid).set(doc),id?'Team saved':`${name} registered`)){closeModal();if(!id)logEv('admin',`Registered team ${name}`)}},
+  async spot(f){const id=f.dataset.id;const g=k=>(document.getElementById(k)?.value||'').trim();if(!g('sp-name')){$('#sp-err').textContent='Give the spot a name.';return}
+    const pin=g('sp-pin');const clash=S.spots.find(s=>s.id!==id&&String(s.pin)===pin);if(clash){$('#sp-err').textContent=`PIN ${pin} is already used by ${clash.name}.`;return}
+    const doc={no:+g('sp-no')||1,name:g('sp-name'),area:g('sp-area'),volunteer:g('sp-vol'),phone:g('sp-ph'),volunteer2:g('sp-vol2'),pin,notes:g('sp-notes'),clue:g('sp-clue'),hint:g('sp-hint')};
+    const asg=[...f.querySelectorAll('.asg')].map(r=>({team:r.querySelector('.sa-team').value,step:+r.querySelector('.sa-step').value})).filter(a=>a.team||a.step);
+    if(asg.some(a=>!a.team||!a.step)){$('#sp-err').textContent='Choose both a team and a clue number on every row, or remove the row.';return}
+    const seen=new Set();for(const a of asg){if(seen.has(a.team)){$('#sp-err').textContent=`${teamById(a.team)?.name} is listed twice. A team visits each spot only once.`;return}seen.add(a.team)}
+    const sid=id||('s'+Date.now().toString(36));
+    const changes=[];for(const t of S.teams){const a=asg.find(x=>x.team===t.id);const rt=route(t).map(r=>({...r}));let ch=false;
+      rt.forEach((r,i)=>{if(r.spotId===sid&&!(a&&a.step===i+1)){r.spotId='';ch=true}});
+      if(a&&rt[a.step-1].spotId!==sid){rt[a.step-1].spotId=sid;ch=true}
+      if(ch)changes.push({t,rt})}
+    const ok=await save(async()=>{await S.db.doc('spots/'+sid).set(doc);for(const c of changes)await S.db.doc('teams/'+c.t.id).update({route:c.rt})},
+      changes.length?`Spot saved · ${changes.length} team route${changes.length>1?'s':''} updated`:'Spot saved');
+    if(ok){closeModal();if(changes.length)logEv('admin',`Updated teams at ${doc.name}: `+asg.map(a=>`${teamById(a.team)?.name} #${a.step}`).join(', '))}},
+  async arrive(f){const t=teamById(f.dataset.id),n=+f.dataset.step,admin=!!f.dataset.admin;
+    const miss=range(n-1).filter(i=>!(t.checkins||{})[i]?.t);if(!admin&&miss.length){toast(`${t.name} hasn't checked in for clue #${miss[0]} yet, so this arrival can't be recorded.`,'bad');closeModal();return}const ts=timeToday($('#ar-time').value)||Date.now();
+    const sp=route(t)[n-1].spotId;const by=admin?'admin':S.spotId;const s=spotById(S.spotId);const byName=admin?'Control room':(s?.volunteer||spotLabel(S.spotId));
+    const ok=await save(()=>S.db.doc('teams/'+t.id).update({checkins:{[n]:{t:ts,at:Date.now(),spot:sp,by,byName,note:$('#ar-note').value.trim()}}}),`${t.name} arrived · clue #${n}`);
+    if(ok){logEv('arrival',`${t.name} reached ${spotLabel(sp)} (clue #${n}) at ${fmtT(ts)}${n===N()?' and finished the hunt':''}`,{teamId:t.id,spotId:sp});
+      if(admin)progressModal(t.id);else closeModal()}},
+  async hint(f){const t=teamById(f.dataset.id);const slot=range(LL()).find(i=>!(t.lifelines||{})[i]?.t);if(!slot){toast('No lifelines left','bad');return}
+    const n=+$('#hn-clue').value;const note=$('#hn-note').value.trim();const aid=f.dataset.alert;const al=aid&&S.alerts.find(a=>a.id===aid);const hint=al?$('#hn-hint').value:null;
+    const ok=await save(async()=>{await S.db.doc('teams/'+t.id).update({lifelines:{[slot]:{t:Date.now(),clue:n,note,via:al?al.spotId:'call'}}});
+      if(al)await S.db.doc('alerts/'+aid).update({resolved:true,resolvedAt:Date.now(),status:'hint',reply:{hint,note,t:Date.now()}})},al?`Hint sent to ${spotLabel(al.spotId)}`:`Lifeline used · ${LL()-llUsed(t)-1} left`);
+    if(ok){logEv('lifeline',`${t.name} used lifeline ${slot} on clue #${n}${al?' · hint sent to '+spotLabel(al.spotId):''}`,{teamId:t.id});closeModal()}},
+  async reqHint(){const t=teamById($('#rh-team').value);if(!t){$('#rh-err').textContent='Choose the team.';return}const p=progress(t);const s=spotById(S.spotId);
+    if(S.alerts.some(a=>!a.resolved&&a.kind==='hint'&&a.teamId===t.id&&a.clue===p.next)){$('#rh-err').textContent=`A hint request for ${t.name} on clue #${p.next} is already waiting.`;return}
+    const msg=$('#rh-msg').value.trim();
+    if(await save(()=>S.db.collection('alerts').add({t:Date.now(),kind:'hint',type:'Hint request',teamId:t.id,clue:p.next,spotId:S.spotId,by:s?.volunteer||'',msg,resolved:false}),'Hint request sent. The reply will appear on this screen.')){logEv('alert',`${spotLabel(S.spotId)} requested a hint for ${t.name} (clue #${p.next})`,{spotId:S.spotId,teamId:t.id});closeModal()}},
+  async resolve(f){const id=f.dataset.id;const a=S.alerts.find(x=>x.id===id);const note=$('#rs-note').value.trim();const notify=$('#rs-notify').checked;
+    if(await save(()=>S.db.doc('alerts/'+id).update({resolved:true,resolvedAt:Date.now(),status:'resolved',reply:notify?{note:note||'Resolved by the control room.',t:Date.now()}:null}),notify?'Resolved · volunteer notified':'Resolved')){logEv('admin',`Resolved ${a?a.type:'alert'} from ${spotLabel(a?.spotId)}${note?': '+note:''}`,{spotId:a?.spotId});closeModal()}},
+  async sos(){const s=spotById(S.spotId);const type=$('#so-type').value,msg=$('#so-msg').value.trim();
+    if(await save(()=>S.db.collection('alerts').add({t:Date.now(),spotId:S.spotId,by:s?.volunteer||'',type,msg,resolved:false}),'Alert sent to the control room')){logEv('alert',`${spotLabel(S.spotId)}: ${type}${msg?' · '+msg:''}`,{spotId:S.spotId});closeModal()}},
+  async broadcast(){const msg=$('#bc-msg').value.trim();if(!msg)return;if(await save(()=>saveMeta({broadcast:{msg,t:Date.now()}}),'Sent to all volunteers'))logEv('admin','Broadcast: '+msg)},
+  async settings(){const g=k=>(document.getElementById(k)?.value||'').trim();
+    const patch={name:g('set-name'),date:g('set-date'),venue:g('set-venue'),series:g('set-series'),startTime:g('set-stime'),startPoint:g('set-spoint'),presenter:g('set-presenter'),tagline:g('set-tagline'),motto:g('set-motto'),hosts:(document.getElementById('set-hosts')?.value||'').trim(),finish:g('set-finish'),phone:g('set-phone'),phone2:g('set-phone2'),adminPin:g('set-pin')||'2026',cluesToWin:Math.max(1,Math.min(15,+g('set-clues')||8)),lifelines:Math.max(0,Math.min(10,+g('set-ll')||0)),maxTeams:+g('set-max')||16};
+    await save(()=>saveMeta(patch),'Event details saved')}
+};
+document.addEventListener('submit',e=>{const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();const h=FORMS[f.dataset.form];if(h)h(f)});
+
+/* ---------- Firebase adapter ---------- */
+const MERGE_MAPS=['checkins','lifelines'];
+function makeDb(fs){
+  const flat=d=>{const o={};for(const k in d){const v=d[k];if(MERGE_MAPS.includes(k)&&v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).length){for(const j in v)o[k+'.'+j]=v[j]===undefined?null:v[j]}else o[k]=v===undefined?null:v}return o};
+  const w=p=>{let done=false;const guard=new Promise(r=>setTimeout(()=>{if(!done)toast('Saved on this phone. It will sync when the network is back.');r()},6000));return Promise.race([p.then(x=>{done=true;return x}),guard])};
+  const wrapDoc=ref=>({id:ref.id,path:ref.path,get:()=>ref.get().then(s=>({id:s.id,exists:s.exists,data:()=>s.data()})),set:d=>w(ref.set(d)),update:d=>w(ref.update(flat(d))),delete:()=>w(ref.delete()),
+    onSnapshot:(n,e)=>ref.onSnapshot(s=>n({id:s.id,exists:s.exists,data:()=>s.data(),metadata:s.metadata}),e)});
+  const wrapQ=q=>({where:(...a)=>wrapQ(q.where(...a)),orderBy:(f,d)=>wrapQ(q.orderBy(f,d||'asc')),limit:n=>wrapQ(q.limit(n)),get:()=>q.get(),onSnapshot:(n,e)=>q.onSnapshot(n,e)});
+  return {doc:p=>wrapDoc(fs.doc(p)),collection:p=>{const c=fs.collection(p);return Object.assign(wrapQ(c),{doc:id=>wrapDoc(id?c.doc(id):c.doc()),add:d=>{const r=c.doc();return w(r.set(d)).then(()=>wrapDoc(r))}})}};
+}
+/* ---------- boot ---------- */
+(async()=>{const sess=lsGet('hh.session');if(sess&&sess.role){S.role=sess.role;S.spotId=sess.spotId;S.tab=sess.tab||'dash'}
+  render();
+  let db=null;
+  try{const cfg=window.HH_FIREBASE;if(window.firebase&&cfg&&cfg.apiKey&&!/PASTE/i.test(cfg.apiKey)){firebase.initializeApp(cfg);const fs=firebase.firestore();fs.settings({ignoreUndefinedProperties:true});fs.enablePersistence({synchronizeTabs:true}).catch(()=>{});db=makeDb(fs)}}catch(e){console.error(e)}
+  S.db=db;if(!db){S.offline=true;S.role=S.role==='board'?'board':null;render({force:true});return}
+  S.dl={save:({filename,data})=>{const u=URL.createObjectURL(new Blob([data],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return Promise.resolve({status:'saved'})}};
+  const onErr=e=>{console.error(e);if(e&&e.code==='permission-denied')toast('The database refused access. Check the Firestore rules (see SETUP guide).','bad');else toast('Lost live connection. Reload the page.','bad')};
+  const changed=k=>{S.loaded[k]=true;if(S.role==='vol'&&S.loaded.spots&&!spotById(S.spotId)&&S.spots.length){}render()};
+  db.doc('meta/event').onSnapshot(s=>{S.meta=s.exists?{...s.data()}:{};changed('meta')},onErr);
+  db.collection('spots').onSnapshot(s=>{S.spots=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(+a.no||0)-(+b.no||0));changed('spots')},onErr);
+  db.collection('teams').onSnapshot(s=>{S.teams=s.docs.map(d=>({...d.data(),id:d.id}));changed('teams')},onErr);
+  db.collection('log').orderBy('t','desc').limit(150).onSnapshot(s=>{S.log=s.docs.map(d=>({...d.data(),id:d.id}));changed('log')},onErr);
+  db.collection('alerts').orderBy('t','desc').limit(60).onSnapshot(s=>{const before=S.alerts.filter(a=>!a.resolved).length;S.alerts=s.docs.map(d=>({...d.data(),id:d.id}));
+    const now=S.alerts.filter(a=>!a.resolved).length;if(S.role==='admin'&&S.loaded.alerts&&now>before){const nw=S.alerts.find(a=>!a.resolved);toast(nw&&nw.kind==='hint'?'New hint request from '+spotLabel(nw.spotId):'New alert from a spot','bad')}
+    const replies=S.alerts.filter(a=>a.spotId===S.spotId&&a.reply&&!a.ack);S.seen=S.seen||new Set();
+    if(S.role==='vol'&&S.loaded.alerts){for(const a of replies)if(!S.seen.has(a.id)){toast(a.reply.hint!=null?'Hint received from the control room':'Control room replied');try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}}
+    replies.forEach(a=>S.seen.add(a.id));changed('alerts')},onErr);
+})();
+</script>
+</body>
+</html>

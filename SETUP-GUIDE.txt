@@ -1,0 +1,87 @@
+HERITAGE TREASURE HUNT – SETUP GUIDE
+Zonal Meet 1.0 · 27 Sept 2026
+
+What's in this folder
+  index.html          The app. This is the only file that changes when you update the app.
+  firebase-config.js  Your database settings. You fill this in once, then keep it.
+  seed-data.js        Your 25 spots, event details and example teams. Used once.
+  firestore.rules     Security rules to paste into Firebase.
+  logos/              All logos.
+
+Takes about 20–30 minutes. You need a Google account and a laptop.
+
+------------------------------------------------------------
+PART A – CREATE THE DATABASE (Firebase, free)
+------------------------------------------------------------
+1. Go to https://console.firebase.google.com and sign in with Google.
+2. Click "Create a project". Name it e.g. heritage-hunt-zone1.
+   Turn OFF Google Analytics (not needed). Click Create.
+3. In the left menu: Build > Firestore Database > Create database.
+   - Location: asia-south1 (Mumbai)
+   - Choose "Start in production mode". Click Create.
+4. Open the "Rules" tab of Firestore. Delete everything there, paste the
+   whole content of firestore.rules from this folder, click Publish.
+   (The rules allow only this app's data and switch off on 15 Oct 2026.
+   To keep using it longer, change the date in the rules and Publish again.)
+5. Click the gear icon (top left) > Project settings > General.
+   Scroll to "Your apps" and click the web icon  </>
+   - App nickname: hunt-web. Do NOT tick Firebase Hosting. Click Register app.
+   - You will see a block called firebaseConfig with apiKey, authDomain,
+     projectId, storageBucket, messagingSenderId, appId.
+6. Open firebase-config.js from this folder in Notepad (Windows) or TextEdit
+   (Mac) and replace each PASTE_... value with the matching value from
+   Firebase. Keep the quotes. Save the file.
+
+------------------------------------------------------------
+PART B – PUT THE SITE ONLINE (Netlify, free)
+------------------------------------------------------------
+7. Go to https://app.netlify.com/signup and create a free account
+   (sign in with Google is fine). Create the account FIRST: sites
+   dropped without an account are deleted after an hour.
+8. In Netlify: Add new site > Deploy manually.
+   Drag this whole folder onto the upload area. Wait for "Published".
+9. Site configuration > Change site name > e.g. heritage-hunt-zone1.
+   Your link is now https://heritage-hunt-zone1.netlify.app
+
+------------------------------------------------------------
+PART C – FIRST RUN
+------------------------------------------------------------
+10. Open your link. You will see "First-time setup".
+    Tap "Load starting data" (tap twice to confirm).
+    If you see "Not connected to the database", check firebase-config.js.
+11. Open the Control room with admin PIN 2026. Then in Settings:
+    - change the admin PIN,
+    - fill start point, finish point, control room phone numbers.
+12. Spots & volunteers: add each volunteer's name and phone, check each
+    spot PIN, and fill the clue text and hint for each spot.
+13. Teams: delete the 3 example teams and register your real teams.
+
+------------------------------------------------------------
+PART D – GIVE ACCESS TO VOLUNTEERS
+------------------------------------------------------------
+14. Send each volunteer the link and ONLY their own spot PIN
+    (e.g. on WhatsApp). No account or app install is needed.
+    Ask them to "Add to Home screen" in Chrome/Safari for quick access.
+15. Share the admin PIN only with the control room team.
+16. For the start/finish screen, open the link and tap "Show scoreboard".
+17. Rehearse with 2–3 phones on 26 Sept. Afterwards: Settings >
+    "Reset all progress" to clear test times and lifelines.
+
+------------------------------------------------------------
+MAKING CHANGES AFTER IT IS LIVE
+------------------------------------------------------------
+- Event details, spots, volunteers, PINs, clues, hints, teams, routes:
+  change them any time inside the app (Control room). No redeploy needed.
+  Everyone sees the change instantly.
+- Changes to how the app works or looks: ask Claude for an updated
+  index.html. Replace ONLY index.html in this folder (keep your filled
+  firebase-config.js), then in Netlify open your site > Deploys and drag
+  the folder onto the upload area again. Same link, all data kept.
+  Tell volunteers to refresh the page.
+- Keep a copy of this folder (e.g. Google Drive) as your master copy.
+
+Tips for event day
+- Volunteers' phones: screen brightness up, battery full, power bank.
+- If a phone loses network, arrivals are saved on the phone and sync
+  when the network returns (the app will say so).
+- Control room should keep the Dashboard open on a laptop.
