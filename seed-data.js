@@ -1,8 +1,8 @@
-// Starting data copied from the Claude version. Used once by "Load starting data".
+// Starting data for "Load starting data" (Control room > Dashboard, first run only).
+// Holds no PINs: create them in the app after loading. Do NOT upload this file to Netlify.
 window.HH_SEED={
  "meta": {
   "event": {
-   "adminPin": "2026",
    "broadcast": null,
    "cluesToWin": 8,
    "date": "2026-09-27",
@@ -32,7 +32,6 @@ window.HH_SEED={
    "no": 1,
    "notes": "",
    "phone": "",
-   "pin": "1001",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -42,7 +41,6 @@ window.HH_SEED={
    "no": 2,
    "notes": "",
    "phone": "",
-   "pin": "1002",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -52,7 +50,6 @@ window.HH_SEED={
    "no": 3,
    "notes": "",
    "phone": "",
-   "pin": "1003",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -62,7 +59,6 @@ window.HH_SEED={
    "no": 4,
    "notes": "",
    "phone": "",
-   "pin": "1004",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -72,7 +68,6 @@ window.HH_SEED={
    "no": 5,
    "notes": "",
    "phone": "",
-   "pin": "1005",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -82,7 +77,6 @@ window.HH_SEED={
    "no": 6,
    "notes": "",
    "phone": "",
-   "pin": "1006",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -92,7 +86,6 @@ window.HH_SEED={
    "no": 7,
    "notes": "",
    "phone": "",
-   "pin": "1007",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -102,7 +95,6 @@ window.HH_SEED={
    "no": 8,
    "notes": "",
    "phone": "",
-   "pin": "1008",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -112,7 +104,6 @@ window.HH_SEED={
    "no": 9,
    "notes": "",
    "phone": "",
-   "pin": "1009",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -122,7 +113,6 @@ window.HH_SEED={
    "no": 10,
    "notes": "",
    "phone": "",
-   "pin": "1010",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -132,7 +122,6 @@ window.HH_SEED={
    "no": 11,
    "notes": "",
    "phone": "",
-   "pin": "1011",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -142,7 +131,6 @@ window.HH_SEED={
    "no": 12,
    "notes": "",
    "phone": "",
-   "pin": "1012",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -152,7 +140,6 @@ window.HH_SEED={
    "no": 13,
    "notes": "",
    "phone": "",
-   "pin": "1013",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -162,7 +149,6 @@ window.HH_SEED={
    "no": 14,
    "notes": "",
    "phone": "",
-   "pin": "1014",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -172,7 +158,6 @@ window.HH_SEED={
    "no": 15,
    "notes": "",
    "phone": "",
-   "pin": "1015",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -182,7 +167,6 @@ window.HH_SEED={
    "no": 16,
    "notes": "",
    "phone": "",
-   "pin": "1016",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -192,7 +176,6 @@ window.HH_SEED={
    "no": 17,
    "notes": "",
    "phone": "",
-   "pin": "1017",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -202,7 +185,6 @@ window.HH_SEED={
    "no": 18,
    "notes": "",
    "phone": "",
-   "pin": "1018",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -212,7 +194,6 @@ window.HH_SEED={
    "no": 19,
    "notes": "",
    "phone": "",
-   "pin": "1019",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -222,7 +203,6 @@ window.HH_SEED={
    "no": 20,
    "notes": "",
    "phone": "",
-   "pin": "1020",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -232,7 +212,6 @@ window.HH_SEED={
    "no": 21,
    "notes": "",
    "phone": "",
-   "pin": "1021",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -242,7 +221,6 @@ window.HH_SEED={
    "no": 22,
    "notes": "",
    "phone": "",
-   "pin": "1022",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -252,7 +230,6 @@ window.HH_SEED={
    "no": 23,
    "notes": "",
    "phone": "",
-   "pin": "1023",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -262,7 +239,6 @@ window.HH_SEED={
    "no": 24,
    "notes": "",
    "phone": "",
-   "pin": "1024",
    "volunteer": "",
    "volunteer2": ""
   },
@@ -272,7 +248,6 @@ window.HH_SEED={
    "no": 25,
    "notes": "",
    "phone": "",
-   "pin": "1025",
    "volunteer": "",
    "volunteer2": ""
   }
