@@ -140,7 +140,7 @@ body.has-bar .wrap{padding-bottom:100px}
 .stat b{display:block;font-family:var(--mono);font-size:24px;line-height:1.2}
 .stat span{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
 @media (max-width:420px){.stat{padding:8px}.stat b{font-size:19px}.stat span{font-size:9.5px}}
-.sw{width:11px;height:11px;border-radius:3px;background:var(--c);display:inline-block;flex:none}
+.sw{width:11px;height:11px;border-radius:3px;background:var(--c);display:inline-block;flex:none;box-shadow:inset 0 0 0 1px rgba(128,128,128,.45)}
 .dots{display:inline-flex;gap:3px;vertical-align:middle}
 .dots i{width:9px;height:9px;border-radius:50%;border:2px solid var(--gold)}
 .dots i.left{background:var(--gold)}
@@ -190,9 +190,9 @@ tr.click:hover td{background:var(--surface2)}
 .route li{font-family:var(--mono);font-size:12px;background:var(--surface2);border-radius:6px;padding:1px 6px}
 .route li.miss{background:var(--warn-soft);color:var(--warn)}
 .feed{list-style:none;margin:0;padding:0;display:grid}
-.feed li{display:grid;grid-template-columns:52px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+.feed li{display:grid;grid-template-columns:auto 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
 .feed li:last-child{border-bottom:0}
-.feed time{font-family:var(--mono);font-size:12px;color:var(--ink2);padding-top:2px}
+.feed time{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--ink2);padding-top:2px}
 
 /* forms */
 label.f{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--ink2)}
@@ -220,6 +220,9 @@ body.home .wrap{padding-top:26px}
 .hero .series{font-family:var(--mono);font-size:13px;letter-spacing:.18em;border:1px solid var(--gold);color:var(--gold);padding:3px 12px;border-radius:999px}
 .hero h2{font-family:var(--display);font-weight:400;font-size:clamp(34px,7.5vw,62px);color:var(--wood-ink);line-height:1.02}
 .hero .guj{font-family:var(--guj);font-size:clamp(22px,4vw,30px);color:var(--gold);line-height:1;font-weight:700}
+.hero .unesco{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--wood);background:var(--gold);padding:5px 14px;border-radius:999px;text-align:center}
+.hero .unesco::before,.hero .unesco::after{content:"";width:5px;height:5px;background:currentColor;transform:rotate(45deg);flex:none}
+@media (max-width:420px){.hero .unesco{font-size:10.5px;letter-spacing:.08em;padding:5px 10px}}
 .orn{display:flex;align-items:center;gap:10px;color:var(--gold);width:min(340px,80%)}
 .orn::before,.orn::after{content:"";flex:1;height:1px;background:currentColor;opacity:.7}
 .orn i{width:8px;height:8px;background:currentColor;transform:rotate(45deg)}
@@ -230,6 +233,10 @@ body.home .wrap{padding-top:26px}
 .hero .motto{font-family:var(--display);font-size:19px;color:var(--gold);letter-spacing:.02em}
 .hero .hosts{font-size:13px;opacity:.9;max-width:70ch}
 .hero .hosts b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+.hostnames{display:flex;flex-wrap:nowrap;justify-content:center;gap:4px 0;font-size:13.5px;width:100%}
+.hostnames span{white-space:nowrap;padding-inline:12px}
+.hostnames span+span{border-left:1px solid rgba(224,178,90,.55)}
+@media (max-width:760px){.hostnames{flex-direction:column;align-items:center;gap:2px}.hostnames span+span{border-left:0}}
 .hostcard{background:#FFFBF2;border:1px solid var(--gold);border-radius:12px;padding:12px 16px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px}
 .hostcard img{height:58px;width:auto;max-width:100%;object-fit:contain}
 @media (max-width:520px){.hostcard img{height:40px}}
@@ -245,14 +252,21 @@ body.home .wrap{padding-top:26px}
 .door .kick{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;text-align:center}
 .door>p{text-align:center}
 .flow{list-style:none;margin:0;padding:0;display:grid;gap:8px;counter-reset:f}
-.flow li{counter-increment:f;display:flex;gap:10px;font-size:14px;align-items:flex-start}
+.flow li{counter-increment:f;display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;font-size:14px;align-items:start}
 .flow li::before{flex:none;content:counter(f);font-family:var(--mono);width:24px;height:24px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-size:12px;font-weight:700}
-.logos{background:#FFFCF5;border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 0}
-.logos img{height:28px;width:auto;padding-inline:10px;object-fit:contain}
-.logos.lg img{height:48px;padding-inline:16px}
-@media (max-width:640px){.logos img{height:22px;padding-inline:7px}.logos.lg img{height:34px;padding-inline:8px}}
+.logos{background:#FFFCF5;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:8px;justify-items:center}
+.logos .lgrp{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 0;width:100%}
+.logos .lgrp.hostgrp{border-top:1px solid #EADBBF;padding-top:10px}
+.logos .lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#8A6A2E;flex-basis:100%;text-align:center}
+.logos img{height:28px;width:auto;padding-inline:12px;object-fit:contain}
+.logos .lgrp img+img{border-left:1px solid #EADBBF}
+.logos.lg{padding:14px 18px;gap:12px}
+.logos.lg img{height:52px;padding-inline:20px}
+.logos.lg .lgrp.hostgrp img{height:58px}
+@media (max-width:640px){.logos img{height:22px;padding-inline:7px}.logos.lg img{height:32px;padding-inline:8px}.logos.lg .lgrp.hostgrp img{height:36px}.logos .lgrp img+img{border-left:0}}
 .foot{max-width:1100px;margin:0 auto;padding:0 16px 28px;display:grid;gap:8px;justify-items:center}
 .foot p{font-size:12px;color:var(--ink2);text-align:center}
+.foot p.copy{font-size:11.5px;opacity:.85;margin-top:2px}
 body.has-bar .foot,body.has-tabs .foot{padding-bottom:110px}
 @media (min-width:761px){body.has-tabs .foot{padding-bottom:28px}}
 
@@ -283,10 +297,57 @@ body.has-bar .foot,body.has-tabs .foot{padding-bottom:110px}
 .contact .ph{font-family:var(--mono);font-size:18px;font-weight:700}
 
 /* scoreboard */
+.bhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:22px 0 14px}
+.bhead h2{font-family:var(--display);font-weight:400;font-size:28px}
+.btabs{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
+.btabs button{border:0;background:none;padding:8px 16px;border-radius:9px;font-weight:600;color:var(--ink2);cursor:pointer;min-height:38px}
+.btabs button[aria-selected="true"]{background:var(--pri);color:var(--pri-ink)}
+.bgrid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr) 300px;align-items:start}
+.bgrid.full{grid-template-columns:1fr}
+@media (max-width:900px){.bgrid{grid-template-columns:1fr}}
 .lb{display:grid;gap:8px}
-.lbrow{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.lbitem{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.lbitem.open{border-color:var(--gold)}
+.lbrow{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 14px;width:100%;border:0;background:none;color:inherit;text-align:left}
+button.lbrow{cursor:pointer}
+button.lbrow:hover{background:var(--surface2)}
 .lbrow .rk{font-size:26px;width:auto}
 .lbrow .tm{text-align:right;font-family:var(--mono);font-size:15px}
+.tdetail{padding:12px 14px 14px;display:grid;gap:10px;border-top:1px dashed var(--line)}
+.tl{list-style:none;margin:0;padding:0;display:grid}
+.tl li{display:grid;grid-template-columns:32px minmax(0,1fr) auto 62px;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.tl li:last-child{border-bottom:0}
+.tl .n{font-family:var(--mono);font-weight:700;color:var(--ink2)}
+.tl li.done .n{color:var(--pri)}
+.tl li.now{background:var(--gold-soft);margin:0 -8px;padding-inline:8px;border-radius:8px;border-bottom-color:transparent}
+.tl li.now .n{color:var(--warn)}
+.tl .r{text-align:right}
+.trailwrap{overflow-x:auto;padding-bottom:4px}
+.trail{display:grid;grid-template-columns:repeat(var(--n),minmax(40px,1fr));position:relative;min-height:180px;align-items:end;padding-top:8px}
+.trail::before{content:"";position:absolute;left:20px;right:20px;bottom:28px;height:3px;background:repeating-linear-gradient(90deg,var(--gold) 0 8px,transparent 8px 14px);opacity:.75}
+.stn{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative}
+.stn .toks{display:flex;flex-direction:column-reverse;align-items:center;gap:4px}
+.stn .dot{width:14px;height:14px;border-radius:50%;background:var(--surface);border:3px solid var(--gold);position:relative}
+.stn.fin .dot{background:var(--gold);width:18px;height:18px}
+.stn .lbl{font-family:var(--mono);font-size:11px;color:var(--ink2);line-height:16px;white-space:nowrap}
+.tok{width:30px;height:30px;border-radius:50%;background:var(--c);color:#fff;border:2px solid var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.35),inset 0 0 0 1px rgba(128,128,128,.45);font:700 10px/1 var(--mono);cursor:pointer;display:grid;place-items:center;padding:0}
+.tok.sel{outline:3px solid var(--gold);outline-offset:1px}
+.tok.moving{animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+.ticker{list-style:none;margin:0;padding:0;display:grid}
+.ticker li{display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.ticker li:last-child{border-bottom:0}
+.ticker .grow{flex:1;min-width:0}
+.ticker .ago{white-space:nowrap}
+.map{height:min(540px,65vh);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--surface2);margin-top:12px}
+.maplegend{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink);min-height:34px}
+.chip .sw{background:var(--c)}
+.chip.sel{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c)}
+.maplock{display:flex;gap:12px;align-items:flex-start}
+.maplock svg{width:22px;height:22px;color:var(--gold);margin-top:2px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .map .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}}
+:root[data-theme="dark"] .map .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}
 
 /* modal: bottom sheet on phones */
 .modal{position:fixed;inset:0;z-index:50;background:rgba(10,6,4,.5);display:flex;align-items:flex-end;justify-content:center}
@@ -305,7 +366,8 @@ body.has-bar .foot,body.has-tabs .foot{padding-bottom:110px}
 .swatches{display:flex;flex-wrap:wrap;gap:6px}
 .swatches label{cursor:pointer}
 .swatches input{position:absolute;opacity:0;pointer-events:none}
-.swatches span{display:block;width:30px;height:30px;border-radius:8px;background:var(--c);border:3px solid transparent}
+.swatches span{display:block;width:30px;height:30px;border-radius:8px;background:var(--c);border:3px solid transparent;box-shadow:inset 0 0 0 1px rgba(128,128,128,.45)}
+.swatches input:disabled+span{opacity:.25}
 .swatches input:checked+span{border-color:var(--ink)}
 .swatches input:focus-visible+span{outline:2px solid var(--gold)}
 .player{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:8px;align-items:end}
@@ -337,7 +399,13 @@ body.has-bar .foot,body.has-tabs .foot{padding-bottom:110px}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script>
-const COLORS=['#C0392B','#1F77B4','#2CA02C','#8E44AD','#E67E22','#12A4B6','#8C564B','#D63384','#7A8B12','#34495E','#D4A20A','#16A085','#E84393','#5B4BDB','#00955E','#A0522D'];
+const PALETTE=[['#F28C28','Orange'],['#F5C518','Yellow'],['#4FB3E8','Sky Blue'],['#EC6FA8','Pink'],['#8E44AD','Violet'],['#1C1C1C','Black'],['#7B4A2A','Brown'],['#8A8A8A','Gray'],
+  ['#2EAD4B','Green'],['#1F3A93','Navy Blue'],['#D62828','Red'],['#1E6B3A','Dark Green'],['#C19A6B','Light Brown'],['#D4A017','Golden'],['#F7F7F2','White'],['#12A4B6','Teal']];
+const COLORS=PALETTE.map(p=>p[0]);
+const colorName=c=>(PALETTE.find(p=>p[0].toLowerCase()===String(c).toLowerCase())||[])[1]||c;
+const colorByName=n=>{const k=String(n).toLowerCase().replace(/[^a-z]/g,'');const al={grey:'gray',gold:'golden',navy:'navyblue',skyblue:'skyblue',lightblue:'skyblue'};
+  const hit=PALETTE.find(p=>p[1].toLowerCase().replace(/[^a-z]/g,'')===(al[k]||k));return hit?hit[0]:null};
+const inkOn=hex=>{const m=/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex||'');if(!m)return '#fff';const [r,g,b]=m.slice(1).map(x=>parseInt(x,16));return (0.299*r+0.587*g+0.114*b)/255>0.62?'#1A1208':'#fff'};
 const S={meta:{},spots:[],teams:[],board:[],log:[],alerts:[],pins:[],db:null,fs:null,auth:null,dl:null,role:null,spotId:null,tab:'dash',
   loaded:{},offline:false,pending:false,restoring:true,unsubs:[],showPins:false,openD:{},seen:new Set()};
 const $=s=>document.querySelector(s);
@@ -398,7 +466,15 @@ function routeIssues(t){const r=route(t),iss=[];const ids=r.map(x=>x.spotId).fil
 
 /* public scoreboard copy of a team: no players, phones, routes or clues */
 const pubMap=m=>{const o={};for(const k in (m||{})){const v=m[k];if(v&&v.t)o[k]={t:v.t}}return o};
-const pubTeam=t=>({name:t.name||'',code:t.code||'',color:t.color||'',withdrawn:!!t.withdrawn,startAt:t.startAt||null,checkins:pubMap(t.checkins),lifelines:pubMap(t.lifelines)});
+/* After the hunt ends the scoreboard copy also gets each team's visited spots, for the map. */
+const revealSpots=()=>S.meta.status==='ended'||S.meta.liveSpots!==false;
+function trailOf(t){return range(N()).map(i=>{const c=(t.checkins||{})[i];if(!c||!c.t)return null;const s=spotById(c.spot||route(t)[i-1].spotId);
+  return {clue:i,t:c.t,name:s?s.name:'',lat:s&&s.lat!=null?s.lat:null,lng:s&&s.lng!=null?s.lng:null}}).filter(Boolean)}
+const pubTeam=t=>{const pl=(t.players||[]).map(p=>String(p&&p.name||'').trim());
+  return {name:t.name||'',code:t.code||'',color:t.color||'',withdrawn:!!t.withdrawn,startAt:t.startAt||null,checkins:pubMap(t.checkins),lifelines:pubMap(t.lifelines),
+    players:pl.filter(Boolean),captain:pl[t.captain||0]||'',trail:revealSpots()?trailOf(t):null}};
+const normBoard=b=>({name:b.name||'',code:b.code||'',color:b.color||'',withdrawn:!!b.withdrawn,startAt:b.startAt||null,checkins:pubMap(b.checkins),lifelines:pubMap(b.lifelines),
+  players:b.players||[],captain:b.captain||'',trail:b.trail||null});
 const stable=v=>v&&typeof v==='object'&&!Array.isArray(v)?'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+stable(v[k])).join(',')+'}':JSON.stringify(v??null);
 const quiet=p=>{Promise.resolve(p).catch(()=>{})};
 function boardSet(id,t){if(S.fs)quiet(S.fs.doc('board/'+id).set(pubTeam(t)))}
@@ -442,9 +518,10 @@ function render(opts){opts=opts||{};const main=$('#main');const ae=document.acti
   document.body.classList.toggle('home',!S.role);
   main.innerHTML=html;
   for(const id in saved){const e=document.getElementById(id);if(e&&!e.hasAttribute('data-live')){if(e.type==='checkbox')e.checked=saved[id];else e.value=saved[id]}}
+  if(S.role==='board'&&S.boardTab==='map')mountMap();
   tick()}
 document.addEventListener('focusout',()=>setTimeout(()=>{const ae=document.activeElement;if(S.pending&&!(ae&&$('#main').contains(ae)&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName))){S.pending=false;render()}},80));
-document.addEventListener('toggle',e=>{const d=e.target;if(d.tagName==='DETAILS'&&d.dataset.k)S.openD[d.dataset.k]=d.open},true);
+document.addEventListener('toggle',e=>{const d=e.target;if(d.tagName==='DETAILS'&&d.dataset.k){S.openD[d.dataset.k]=d.open;if(d.dataset.k==='vol-guide')lsSet('hh.vguideClosed',!d.open)}},true);
 
 function renderHeader(){const st=S.meta.status||'setup';
   const s=spotById(S.spotId);
@@ -458,10 +535,12 @@ const LOGOS=[['logos/rotary.png','Rotary District 3055'],['logos/impact.png','Cr
 const HOSTS=[['logos/host-kankaria.png','Rotaract Club of Kankaria'],['logos/host-emerald.png','Rotaract Club of Ahmedabad Emerald'],['logos/host-indus.png','Rotaract Club of Ahmedabad Indus University']];
 const imgs=list=>list.map(([src,alt])=>`<img src="${src}" alt="${esc(alt)}" loading="lazy">`).join('');
 $('#logobar').innerHTML=`<div class="in">${imgs(LOGOS)}</div>`;
-const logoBand=cls=>`<div class="logos ${cls||''}">${imgs([...LOGOS,...HOSTS])}</div>`;
+const logoBand=cls=>`<div class="logos ${cls||''}"><div class="lgrp">${imgs(LOGOS)}</div><div class="lgrp hostgrp"><span class="lbl">Hosted by</span>${imgs(HOSTS)}</div></div>`;
 function renderFoot(){const f=$('#foot');$('#logobar').hidden=!!S.role;
-  if(S.role!=='admin'&&S.role!=='vol'){f.innerHTML='';return}
-  f.innerHTML=`${logoBand()}<p>${esc(S.meta.series||'')}${S.meta.series?' · ':''}${esc(eventName())}${S.meta.presenter?' · '+esc(S.meta.presenter):''}</p>`}
+  const year=(S.meta.date||'').slice(0,4)||new Date().getFullYear();
+  const copy=`<p class="copy">© ${esc(year)} ${esc(S.meta.presenter||'Rotaract District 3055')}. All rights reserved.</p>`;
+  if(S.role!=='admin'&&S.role!=='vol'){f.innerHTML=copy;return}
+  f.innerHTML=`${logoBand()}<p>${esc(S.meta.series||'')}${S.meta.series?' · ':''}${esc(eventName())}${S.meta.presenter?' · '+esc(S.meta.presenter):''}</p>${copy}`}
 function renderBanner(){const b=S.meta.broadcast;const el=$('#banner');
   if(b&&b.msg&&(S.role==='admin'||S.role==='vol')){el.className='banner';el.innerHTML=`<div class="in"><b>Control room · ${fmtT(b.t)}</b><span>${esc(b.msg)}</span></div>`}else{el.className='';el.innerHTML=''}}
 const TABS=[['dash','Live','dash'],['teams','Teams','teams'],['spots','Spots','spots'],['life','Lifelines','life'],['act','Alerts','act'],['set','Settings','set']];
@@ -472,7 +551,7 @@ function renderBar(){const b=$('#bar');const on=S.role==='vol'&&!!spotById(S.spo
   if(!on){b.innerHTML='';return}const ph=S.meta.phone||S.meta.phone2;
   b.innerHTML=`<div class="in">${ph?`<a class="btn" href="${esc(telHref(ph))}">${icon('phone')}Call</a>`:`<button class="btn" disabled>${icon('phone')}Call</button>`}
   <button class="btn gold" data-act="reqHint">${icon('life')}Hint</button><button class="btn danger" data-act="sos">${icon('warn')}Alert</button></div>`}
-function tick(){const now=Date.now();document.querySelectorAll('[data-since]').forEach(e=>{e.textContent=fmtDur(now-+e.dataset.since)})}
+function tick(){const now=Date.now();document.querySelectorAll('[data-since]').forEach(e=>{e.textContent=fmtDur(now-+e.dataset.since)});document.querySelectorAll('[data-ago]').forEach(e=>{e.textContent=fmtAgo(now-+e.dataset.ago)})}
 setInterval(tick,1000);
 
 /* ---------- login ---------- */
@@ -488,33 +567,34 @@ function vLogin(){const m=S.meta;
     ${m.presenter?`<span class="presents">${esc(m.presenter)} presents</span>`:''}
     ${m.series?`<span class="series">${esc(m.series)}</span>`:''}
     <h2>${esc(eventName())}</h2><span class="guj" lang="gu">અમદાવાદ</span>
+    <span class="unesco">India's first UNESCO World Heritage City</span>
     <div class="orn"><i></i></div>
     ${m.tagline?`<p class="tag">${esc(m.tagline)}</p>`:''}
     <div class="facts">${dateLabel()?`<span><b>Date</b>${esc(dateLabel())}</span>`:''}${m.startTime?`<span><b>Time</b>${esc(fmt12(m.startTime))} onwards</span>`:''}${m.venue?`<span><b>Venue</b>${esc(m.venue)}</span>`:''}</div>
     ${m.motto?`<div class="motto">${esc(m.motto)}</div>`:''}
     <div class="hosts"><b>Hosted by</b></div><div class="hostcard">${imgs(HOSTS)}</div>
-    ${m.hosts?`<div class="hosts">${m.hosts.split(/\n+/).filter(Boolean).map(esc).join(' · ')}</div>`:''}
+    ${m.hosts?`<div class="hostnames">${m.hosts.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}
   </div>${GATE}</div>
   <div class="hstats"><span class="pill">${S.board.length} teams</span>${m.spotCount?`<span class="pill">${m.spotCount} heritage spots</span>`:''}<span class="pill">${N()} clues to finish</span><span class="pill">${LL()} lifelines per team</span>${m.finish?`<span class="pill">Finish: ${esc(m.finish)}</span>`:''}</div>
   ${S.offline?`<div class="panel warnline">Not connected to the database. Open <b>firebase-config.js</b>, paste your Firebase settings, and upload the site again (see the setup guide).</div>`:''}
   <div class="doors">
     <form class="door" data-form="adminLogin" autocomplete="off"><span class="kick">Organisers</span><h3>Control room</h3>
-      <p class="muted small">Register teams, assign volunteers and routes, give lifeline hints, watch every team live.</p>
+      <p class="muted small">Run the hunt from one place: manage teams, routes and volunteers, send lifeline hints and follow every team live.</p>
       <label class="f">Admin PIN<input type="password" inputmode="numeric" id="lg-apin" autocomplete="off" maxlength="12"></label>
       <button class="btn pri" type="submit">Open control room</button><span class="err" id="lg-aerr"></span></form>
     <form class="door" data-form="volLogin" autocomplete="off"><span class="kick">At a spot</span><h3>Spot volunteer</h3>
-      <p class="muted small">See which teams come to your spot, log their arrival time, and hand over the next clue.</p>
+      <p class="muted small">See which teams are heading to your spot, record each arrival and hand over the team's next clue.</p>
       <label class="f">Your spot PIN<input type="password" inputmode="numeric" id="lg-vpin" autocomplete="off" maxlength="12"></label>
       <button class="btn pri" type="submit">Open my spot</button><span class="err" id="lg-verr"></span></form>
     <div class="door"><span class="kick">Everyone</span><h3>Live scoreboard</h3>
-      <p class="muted small">Standings and progress for all teams. Put it on a screen at the start and finish point.</p>
+      <p class="muted small">Follow the race as it happens: live standings and every team's progress, ready for the big screen at the start and finish.</p>
       <button class="btn" data-act="board">Show scoreboard</button></div>
   </div>
-  <div class="panel"><h3 class="display" style="font-size:19px;margin-bottom:10px">How a team moves through the hunt</h3>
-    <ol class="flow"><li>At the start${m.startPoint?' ('+esc(m.startPoint)+')':''} the control room hands each team Clue #1. Every team has its own route of ${N()} spots.</li>
-    <li>Clue #1 leads to the team's first spot. The volunteer there taps <b>Mark arrived</b>, which records the time, and hands over Clue #2.</li>
-    <li>This repeats spot by spot. Stuck teams call the control room to use a lifeline (${LL()} each) and get a hint for their current clue.</li>
-    <li>Arrival at spot #${N()} completes the hunt. The first team to finish wins.</li></ol></div>
+  <details class="panel" data-k="how" ${openAttr('how',false)}><summary><span class="display" style="font-size:19px;font-weight:400">How the hunt works</span></summary>
+    ${flow([`At the start${m.startPoint?' ('+esc(m.startPoint)+')':''} the control room hands each team Clue #1. Every team has its own route of ${N()} spots.`,
+    `Clue #1 leads to the team's first spot. The volunteer there taps <b>Mark arrived</b>, which records the time, and hands over Clue #2.`,
+    `This repeats spot by spot. Stuck teams call the control room to use a lifeline (${LL()} each) and get a hint for their current clue.`,
+    `Arrival at spot #${N()} completes the hunt. The first team to finish wins.`])}</details>
   </section>`}
 
 /* ---------- admin ---------- */
@@ -576,7 +656,7 @@ function feed(items){if(!items.length)return '<p class="muted small">Nothing log
   return `<ul class="feed">${items.map(l=>`<li><time>${fmtT(l.t)}</time><span>${l.type==='arrival'?'<span class="pill ok">Arrival</span> ':l.type==='lifeline'?'<span class="pill gold">Lifeline</span> ':l.type==='alert'?'<span class="pill bad">Alert</span> ':l.type==='undo'?'<span class="pill warn">Correction</span> ':''}${esc(l.text)}</span></li>`).join('')}</ul>`}
 
 function aTeams(){const ts=[...S.teams].sort(byCode);
-  return `<section class="sec"><div class="sec-h"><h2>Teams <span class="small muted">${ts.length}${S.meta.maxTeams?` of ${S.meta.maxTeams}`:''}</span></h2><button class="btn pri sm" data-act="editTeam">${icon('plus')}Register a team</button></div>
+  return `<section class="sec"><div class="sec-h"><h2>Teams <span class="small muted">${ts.length}${S.meta.maxTeams?` of ${S.meta.maxTeams}`:''}</span></h2><span class="row"><button class="btn sm" data-act="bulkTeams">Add several</button><button class="btn pri sm" data-act="editTeam">${icon('plus')}Register a team</button></span></div>
   ${ts.length?`<div class="grid">${ts.map(t=>{const p=progress(t);const cap=(t.players||[])[t.captain||0]||{};const iss=routeIssues(t);const names=(t.players||[]).map(x=>x&&x.name).filter(Boolean);
     return `<article class="card stack" style="gap:8px"><div class="row sp"><span class="tname" style="min-width:0"><span class="sw" style="--c:${t.color}"></span><span class="ell">${esc(t.name)}</span></span><span class="pill">${esc(t.code||'')}</span></div>
     <div class="small"><b>Captain</b> ${esc(cap.name||'—')}${cap.phone?` · <a class="num" href="${esc(telHref(cap.phone))}">${esc(cap.phone)}</a>`:''}${names.length?`<div class="muted">${names.map(esc).join(' · ')}</div>`:'<div class="muted">No players added</div>'}</div>
@@ -597,7 +677,7 @@ function aSpots(){const sp=S.spots;
      <span class="s ell">${st.length?st.map(x=>`${esc(x.t.code||x.t.name)} #${x.step}`).join(' · '):'Not on any route'}</span>
      ${crowd.map(([k,v])=>`<span class="s warn-t">${v.length} teams arrive as clue #${k}; consider staggering.</span>`).join('')}</span>
     <span class="r"><span class="num small ${pin?'':'warn-t'}">${pin?(S.showPins?esc(pin):'••••••'):'No PIN'}</span>
-     <span class="row" style="gap:4px">${s.clue?'<span class="pill ok">Clue</span>':'<span class="pill warn">Clue</span>'}${s.hint?'<span class="pill ok">Hint</span>':'<span class="pill warn">Hint</span>'}</span></span></button>`}).join('')}</div>
+     <span class="row" style="gap:4px">${s.clue?'<span class="pill ok">Clue</span>':'<span class="pill warn">Clue</span>'}${s.hint?'<span class="pill ok">Hint</span>':'<span class="pill warn">Hint</span>'}${s.lat!=null?'<span class="pill ok">Map</span>':'<span class="pill">Map</span>'}</span></span></button>`}).join('')}</div>
   <div class="row"><button class="btn sm" data-act="genPins">Create missing PINs</button><button class="btn sm danger" data-act="genPins" data-all="1" data-confirm="Tap again: every volunteer needs a new PIN">Replace all spot PINs</button></div>`:'<div class="empty">No spots yet.</div>'}</section>`}
 
 function aLife(){const ts=ranked();const hist=S.teams.flatMap(t=>llList(t).filter(Boolean).map(l=>({t,l}))).sort((a,b)=>b.l.t-a.l.t);
@@ -617,7 +697,7 @@ function aAct(){const open=S.alerts.filter(a=>!a.resolved),closed=S.alerts.filte
      <div class="small">${esc(spotLabel(a.spotId))}${a.by?` · ${esc(a.by)}`:''}</div>${a.msg?`<div class="muted">${esc(a.msg)}</div>`:''}
      ${a.kind==='hint'&&teamById(a.teamId)?`<div class="small">${esc(teamById(a.teamId).name)} · clue #${a.clue} · ${dots(teamById(a.teamId))} ${LL()-llUsed(teamById(a.teamId))} left</div>`:''}
      <div class="row">${a.kind==='hint'?`<button class="btn sm gold" data-act="hint" data-id="${a.teamId}" data-alert="${a.id}">Send hint</button>`:''}<button class="btn sm ${a.kind==='hint'?'':'pri'}" data-act="resolve" data-id="${a.id}">${a.kind==='hint'?'Reply without hint':'Resolve with note'}</button></div></div>`).join(''):'<div class="empty">No open alerts.</div>'}
-   ${closed.length?`<details class="card" data-k="act-closed" ${openAttr('act-closed',false)}><summary class="small">Resolved (${closed.length})</summary><ul class="feed">${closed.map(a=>`<li><time>${fmtT(a.t)}</time><span>${esc(spotLabel(a.spotId))} · ${esc(a.type)} ${esc(a.msg||'')}${a.reply?` → <b>${esc(a.reply.hint!=null?'Hint sent: '+a.reply.hint:a.reply.note||'Resolved')}</b>`:''}${a.ack?' <span class="pill ok">Seen</span>':''}</span></li>`).join('')}</ul></details>`:''}</section>
+   ${closed.length?`<details class="card" data-k="act-closed" ${openAttr('act-closed',false)}><summary class="small">Resolved (${closed.length})</summary><ul class="feed">${closed.map(a=>`<li><time>${fmtT(a.t)}</time><span>${esc(spotLabel(a.spotId))} · ${esc(a.type)} ${esc(a.msg||'')}${a.reply?` → <b>${esc(a.reply.hint!=null?(a.reply.hint?'Hint sent: '+a.reply.hint:'Hint sent (no hint text)'):a.reply.note||'Resolved')}</b>`:''}${a.ack?' <span class="pill ok">Seen</span>':''}</span></li>`).join('')}</ul></details>`:''}</section>
    <form class="card stack sec" data-form="broadcast"><div><h3>Message all volunteers</h3><p class="small muted">Shows as a banner on every volunteer's screen until you clear it.</p></div>
     <textarea id="bc-msg" placeholder="e.g. Rain at Manek Chowk. Hold teams under the arcade for 10 minutes.">${esc(S.meta.broadcast?.msg||'')}</textarea>
     <div class="row"><button class="btn pri" type="submit">Send to volunteers</button>${S.meta.broadcast?.msg?'<button class="btn" type="button" data-act="clearBc">Clear banner</button>':''}</div></form></div>
@@ -640,7 +720,8 @@ function aSet(){const m=S.meta;const st=m.status||'setup';const adminPins=S.pins
     <label class="f">Finish point<input type="text" id="set-finish" value="${esc(m.finish||'')}" placeholder="Where teams report after the last clue"></label>
     <label class="f">Clues to finish<input type="number" id="set-clues" min="1" max="15" value="${N()}"></label>
     <label class="f">Lifelines per team<input type="number" id="set-ll" min="0" max="10" value="${LL()}"></label>
-    <label class="f">Team limit<input type="number" id="set-max" min="1" max="100" value="${esc(m.maxTeams||16)}"></label></div></details>
+    <label class="f">Team limit<input type="number" id="set-max" min="1" max="100" value="${esc(m.maxTeams||16)}"></label>
+    <label class="full small" style="display:flex;gap:10px;align-items:flex-start;font-weight:600"><input type="checkbox" id="set-live" style="margin-top:4px" ${m.liveSpots!==false?'checked':''}><span>Show reached spots on the public scoreboard during the hunt<span class="muted" style="display:block;font-weight:400">Spot names and the map show only places a team has already reached. Turn this off if people might pass them on to teams.</span></span></label></div></details>
    <details class="card" data-k="set-ph" ${openAttr('set-ph',false)}><summary>Control room phones</summary><div class="fgrid">
     <label class="f">Main phone<input type="tel" id="set-phone" value="${esc(m.phone||'')}"></label>
     <label class="f">Backup phone<input type="tel" id="set-phone2" value="${esc(m.phone2||'')}"></label></div></details>
@@ -659,7 +740,7 @@ function aSet(){const m=S.meta;const st=m.status||'setup';const adminPins=S.pins
     <div><button class="btn" data-act="csv">Download results CSV</button></div>
     <textarea id="csv-out" hidden readonly style="min-height:120px;font-family:var(--mono);font-size:12px"></textarea>
     <hr style="border:0;border-top:1px solid var(--line);width:100%;margin:0">
-    <p class="small muted">After a rehearsal: clears every arrival and lifeline and resets the clock. Teams, routes and spots stay.</p>
+    <p class="small muted">After a rehearsal: clears every arrival and lifeline, all alerts and hint requests, the volunteer banner and the activity log, and resets the clock. Teams, routes and spots stay.</p>
     <div><button class="btn danger" data-act="reset" data-confirm="Tap again to clear all progress">Reset all progress</button></div></div>
    <p class="small muted">Only people with a PIN can see spots, routes, clues and phone numbers. The public sees event details and the scoreboard only.</p></div></div>`}
 
@@ -676,6 +757,7 @@ function vVol(){const s=spotById(S.spotId);if(!s)return `<div class="empty narro
   <div class="stack">
    ${!isLive()?`<div class="card hl-warn small">${S.meta.status==='ended'?'The hunt has ended. Thank you!':'The hunt has not started yet. Teams below will reach you once the control room starts the clock.'}</div>`:''}
    ${volMsgs()}
+   ${volGuide()}
    ${s.notes?`<div class="card small"><b>Note from control room:</b> ${esc(s.notes)}</div>`:''}
   </div>
   <div class="seg" style="margin-top:14px"><span class="hot"><b>${n('here')}</b>coming now</span><span><b>${n('later')}</b>still to come</span><span><b>${n('arrived')}</b>arrived</span></div>
@@ -720,12 +802,92 @@ function volCard(x){const {t,step,c,state}=x;const last=step===N();
     <div><button class="btn sm" data-act="outOfOrder" data-id="${t.id}" data-step="${step}">Tell control room they came early</button></div></div>`:''}
    ${hand}${actions.length?`<div class="row">${actions.join('')}</div>`:''}</article>`}
 
+function volGuide(){const fin=S.meta.finish||'the finish point';
+  return `<details class="card" data-k="vol-guide" ${openAttr('vol-guide',lsGet('hh.vguideClosed')!==true)}><summary>Volunteer guide</summary>
+  ${flow([`<b>Keep this page open.</b> Every team routed through your spot is listed below. A team moves to <b>Coming now</b> while it is solving the clue that leads to you.`,
+    `<b>When a team arrives,</b> check its name and colour, then tap <b>Mark arrived</b>. The arrival time is saved straight away.`,
+    `<b>Hand over the next clue</b> shown on the team's card (or the printed card with that number). At the last spot, send the team to ${esc(fin)}.`,
+    `<b>Team came too early?</b> If the card says <b>Can't mark arrival yet</b>, don't give any clue. Tap <b>Tell control room they came early</b>.`,
+    `<b>Team stuck?</b> Tap <b>Hint</b> at the bottom and choose the team. When the control room replies, the hint appears here: read it out, then tap <b>Shared with the team</b>.`,
+    `<b>Problem or emergency?</b> Tap <b>Alert</b>, or <b>Call</b> to phone the control room.`,
+    `<b>Made a mistake?</b> Tap <b>Undo arrival</b> within 10 minutes, or call the control room.`,
+    `<b>No network?</b> Keep going. Arrivals are saved on your phone and sync by themselves when the signal returns.`])}
+  <p class="small muted" style="margin-top:10px">Tap the heading to hide this guide. It stays hidden on this phone.</p></details>`}
+const flow=items=>`<ol class="flow">${items.map(x=>`<li><span>${x}</span></li>`).join('')}</ol>`;
+
 /* ---------- scoreboard ---------- */
-function vBoard(){const rows=ranked(S.board);
-  return `${logoBand('lg')}<section class="sec" style="margin-top:20px"><div class="sec-h"><h2>Standings</h2><span class="muted small">${rows.filter(r=>r.p.finished).length} of ${rows.length} teams finished · updates live</span></div>
-  <div class="lb">${rows.map((r,i)=>{const {t,p}=r;return `<div class="lbrow"><div class="rk ${i===0&&p.finished?'first':''}">${i+1}</div>
-   <div style="min-width:0"><div class="tname"><span class="sw" style="--c:${t.color}"></span><span class="ell">${esc(t.name)}</span>${p.finished?'<span class="pill ok">Finished</span>':''}</div>${pipsBar(t,p)}</div>
-   <div class="tm">${timeCell(t,p)}<div class="small muted">${p.solved}/${N()} · ${dots(t)}</div></div></div>`}).join('')||'<div class="empty">No teams yet.</div>'}</div></section>`}
+const shortTag=t=>String(t.code||'').replace(/^[A-Za-z]+0*/,'')||String(t.name||'?').split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+function fmtSplit(ms){const m=Math.round(ms/60000);return m<60?`${m} min`:`${Math.floor(m/60)} h ${pad(m%60)}`}
+function fmtAgo(ms){const m=Math.floor(ms/60000);return m<1?'just now':m<60?`${m} min ago`:`${Math.floor(m/60)} h ${m%60} min ago`}
+function vBoard(){const rows=ranked(S.board);const tab=S.boardTab||'stand';const fin=rows.filter(r=>r.p.finished).length;
+  const body=tab==='trail'?bTrail(rows):tab==='map'?bMap(rows):bStand(rows);
+  return `${logoBand('lg')}
+  <div class="bhead"><div><h2>Live scoreboard</h2><p class="small muted">${rows.length} teams · ${fin} finished${isLive()?' · updates live':''}</p></div>
+   <div class="btabs" role="tablist">${[['stand','Standings'],['trail','Trail'],['map','Map']].map(([k,l])=>`<button role="tab" aria-selected="${tab===k}" data-act="btab" data-tab="${k}">${l}</button>`).join('')}</div></div>
+  <div class="bgrid ${tab==='map'?'full':''}"><div>${body}</div>${tab==='map'?'':`<aside>${bTicker()}</aside>`}</div>`}
+function lbItem(r,i,open){const {t,p}=r;
+  return `<div class="lbitem ${open?'open':''}"><button class="lbrow" data-act="bsel" data-id="${t.id}" aria-expanded="${open}">
+   <span class="rk ${i===0&&p.finished?'first':''}">${i+1}</span>
+   <span style="min-width:0;display:block"><span class="tname"><span class="sw" style="--c:${t.color}"></span><span class="ell">${esc(t.name)}</span>${p.finished?'<span class="pill ok">Finished</span>':''}</span>
+    ${(t.players||[]).length?`<span class="small muted ell" style="display:block">${t.players.map(esc).join(' · ')}</span>`:''}${pipsBar(t,p)}</span>
+   <span class="tm">${timeCell(t,p)}<span class="small muted" style="display:block">${!p.finished&&p.next&&isLive()&&!t.withdrawn?`On clue #${p.next}`:`${p.solved}/${N()}`} · ${dots(t)}</span></span></button>
+   ${open?teamDetail(t,p):''}</div>`}
+function teamDetail(t,p){const st=startOf(t);const ck=t.checkins||{};const trail=new Map((t.trail||[]).map(x=>[x.clue,x]));let prev=st;
+  let left=0;const items=range(N()).map(i=>{const c=ck[i];const sp=trail.get(i);
+    if(c&&c.t){const split=prev?c.t-prev:null;prev=c.t;
+      return `<li class="done"><span class="n">#${i}</span><span class="ell">${sp&&sp.name?esc(sp.name):i===N()?'Final spot':'Spot reached'}</span><span class="num">${fmtT(c.t)}</span><span class="num small muted r">${split!=null?'+'+fmtSplit(split):''}</span></li>`}
+    const now=p.next===i&&isLive()&&!t.withdrawn;const since=now?prev:null;prev=null;
+    if(now)return `<li class="now"><span class="n">#${i}</span><span>Solving now</span><span class="num" ${since?`data-since="${since}"`:''}></span><span></span></li>`;
+    left++;return ''}).join('');
+  const pl=t.players||[];
+  return `<div class="tdetail">
+   ${pl.length?`<div class="small"><b>Players</b> ${pl.map(n=>esc(n)+(n===t.captain?' <span class="pill gold">Captain</span>':'')).join(' · ')}</div>`:''}
+   <div class="row small muted">${st?`<span>Started ${fmtT(st)}</span>`:'<span>Not started</span>'}${p.finished?`<span>· Finished ${fmtT(p.last)} in <b class="num">${fmtDur(p.last-st)}</b></span>`:''}<span>· ${llUsed(t)} of ${LL()} lifelines used</span></div>
+   ${items?`<ol class="tl">${items}</ol>`:''}${left?`<p class="small muted">${p.solved?`${left} more clue${left>1?'s':''} to go`:`No arrivals yet · ${N()} clues to go`}</p>`:''}</div>`}
+function bStand(rows){if(!rows.length)return '<div class="empty">No teams yet.</div>';
+  return `<div class="lb">${rows.map((r,i)=>lbItem(r,i,S.boardSel===r.t.id)).join('')}</div><p class="small muted" style="margin-top:8px">Tap a team to see its players and the time at every clue.</p>`}
+function selCard(rows){const i=rows.findIndex(r=>r.t.id===S.boardSel);return i<0?'':`<div style="margin-top:12px">${lbItem(rows[i],i,true)}</div>`}
+function bTrail(rows){if(!rows.length)return '<div class="empty">No teams yet.</div>';
+  const cols=N()+1;
+  return `<div class="card"><div class="trailwrap"><div class="trail" style="--n:${cols}">${range(cols).map(j=>{const k=j-1;const here=rows.filter(r=>Math.min(r.p.solved,N())===k);
+    return `<div class="stn ${k===N()?'fin':''}"><div class="toks">${here.map(r=>`<button class="tok ${r.t.id===S.boardSel?'sel':''} ${isLive()&&!r.p.finished?'moving':''}" style="--c:${r.t.color};color:${inkOn(r.t.color)}" data-act="bsel" data-id="${r.t.id}" title="${esc(r.t.name)}" aria-label="${esc(r.t.name)}">${esc(shortTag(r.t))}</button>`).join('')}</div>
+     <span class="dot"></span><span class="lbl">${k===0?'Start':k===N()?'Finish':'#'+k}</span></div>`}).join('')}</div></div>
+   <p class="small muted" style="margin-top:6px">Each token is a team, shown at the last clue it reached. ${revealSpots()?'Spots appear only after a team has reached them.':'Spot names stay hidden until the hunt ends.'} Tap a token for details.</p></div>
+  ${selCard(rows)}`}
+function bMap(rows){
+  if(!revealSpots())return `<div class="card maplock">${icon('lock')}<div><b>The map opens when the hunt ends</b><p class="small muted">Showing spot locations now would give the routes away. Follow the race on the Trail tab.</p></div></div>`;
+  if(!rows.some(r=>(r.t.trail||[]).length))return '<div class="empty">Each team\'s route appears here as it reaches its spots.</div>';
+  if(!rows.some(r=>(r.t.trail||[]).some(x=>x.lat!=null)))return '<div class="empty">No spot locations yet. Organisers can add a map location to each spot in the control room (Spots, then edit a spot).</div>';
+  return `<div class="maplegend">${rows.map(r=>`<button class="chip ${S.boardSel===r.t.id?'sel':''}" data-act="bsel" data-id="${r.t.id}" style="--c:${r.t.color}"><span class="sw"></span>${esc(r.t.name)}</button>`).join('')}</div>
+  <div id="map-ph" class="map"></div>${selCard(rows)}`}
+function bTicker(){const ev=[];
+  for(const t of S.board){if(t.withdrawn)continue;for(const k in t.checkins||{}){const c=t.checkins[k];if(c&&c.t)ev.push({t,k:+k,ts:c.t})}for(const k in t.lifelines||{}){const l=t.lifelines[k];if(l&&l.t)ev.push({t,ll:true,ts:l.t})}}
+  ev.sort((a,b)=>b.ts-a.ts);
+  return `<div class="card"><h3 style="font-size:15px;margin-bottom:6px">Latest</h3>${ev.length?`<ul class="ticker">${ev.slice(0,8).map(e=>`<li><span class="sw" style="--c:${e.t.color}"></span>
+   <span class="grow"><b>${esc(e.t.name)}</b> ${e.ll?'used a lifeline':e.k===N()?'finished the hunt':`reached ${(()=>{const x=(e.t.trail||[]).find(y=>y.clue===e.k);return x&&x.name?esc(x.name)+' (clue #'+e.k+')':'clue #'+e.k})()}`}</span><span class="small muted ago" data-ago="${e.ts}">${fmtAgo(Date.now()-e.ts)}</span></li>`).join('')}</ul>`
+   :'<p class="small muted">Arrivals appear here as teams reach their spots.</p>'}</div>`}
+
+/* Map (after the hunt): one Leaflet map kept alive across re-renders. */
+const LEAFLET={js:['https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js','sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH'],
+  css:['https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css','sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H']};
+let MAP=null,leafP=null;
+function loadLeaflet(){if(window.L)return Promise.resolve();if(leafP)return leafP;
+  leafP=new Promise((res,rej)=>{const c=document.createElement('link');c.rel='stylesheet';c.href=LEAFLET.css[0];c.integrity=LEAFLET.css[1];c.crossOrigin='anonymous';document.head.appendChild(c);
+    const s=document.createElement('script');s.src=LEAFLET.js[0];s.integrity=LEAFLET.js[1];s.crossOrigin='anonymous';s.onload=res;s.onerror=()=>{leafP=null;rej()};document.head.appendChild(s)});return leafP}
+function mountMap(){const ph=document.getElementById('map-ph');if(!ph)return;
+  if(!MAP){const el=document.createElement('div');el.className='map';MAP={el,key:''}}ph.replaceWith(MAP.el);
+  loadLeaflet().then(()=>{if(!MAP.map){MAP.map=L.map(MAP.el,{scrollWheelZoom:false});
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors',referrerPolicy:'strict-origin-when-cross-origin'}).addTo(MAP.map);
+      MAP.group=L.layerGroup().addTo(MAP.map)}
+    setTimeout(()=>MAP.map.invalidateSize(),0);drawMap()})
+   .catch(()=>{MAP.el.innerHTML='<p class="small muted" style="padding:16px">The map could not load. Check the internet connection and reload.</p>'})}
+function drawMap(){const rows=ranked(S.board).sort((a,b)=>(a.t.id===S.boardSel)-(b.t.id===S.boardSel));
+  const key=stable({tr:rows.map(r=>[r.t.id,r.t.color,r.t.trail||null]),sel:S.boardSel||''});if(key===MAP.key)return;MAP.key=key;MAP.group.clearLayers();const pts=[];
+  for(const {t} of rows){const tr=(t.trail||[]).filter(x=>x.lat!=null&&x.lng!=null);if(!tr.length)continue;const dim=!!S.boardSel&&S.boardSel!==t.id;const ll=tr.map(x=>[x.lat,x.lng]);pts.push(...ll);
+    L.polyline(ll,{color:t.color,weight:dim?2:4,opacity:dim?.25:.9}).addTo(MAP.group);
+    tr.forEach(x=>L.circleMarker([x.lat,x.lng],{radius:dim?4:7,color:'#fff',weight:2,fillColor:t.color,fillOpacity:dim?.35:1})
+      .bindTooltip(`<b>${esc(t.name)}</b> · clue #${x.clue}<br>${esc(x.name||'')} · ${fmtT(x.t)}`).addTo(MAP.group))}
+  if(pts.length&&pts.length!==MAP.fitN){MAP.map.fitBounds(pts,{padding:[30,30],maxZoom:17});MAP.fitN=pts.length}}
 
 /* ---------- modal ---------- */
 function openModal(title,body,foot){const m=$('#modal');m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sheet-h"><h2 class="ell">${esc(title)}</h2><button class="x" data-act="close" aria-label="Close">×</button></div><div class="sheet-b">${body}</div>${foot?`<div class="sheet-f">${foot}</div>`:''}</div>`;m.hidden=false;
@@ -742,7 +904,7 @@ function teamModal(id){const t=id?teamById(id):null;const nextNo=S.teams.length+
    <div class="fgrid"><label class="f">Team name<input type="text" id="tm-name" value="${esc(t?.name||'')}" required></label>
    <label class="f">Team code<input type="text" id="tm-code" value="${esc(t?.code||'T'+pad(nextNo))}"></label>
    <label class="f">Own start time (optional)<input type="time" id="tm-start" value="${t?.startAt?fmtHM(t.startAt):''}"></label></div>
-   <div class="f" style="font-size:13px;font-weight:600;color:var(--ink2);display:grid;gap:6px">Team colour<div class="swatches">${COLORS.map(c=>`<label title="${c}"><input type="radio" name="tm-color" value="${c}" ${c===col?'checked':''}><span style="--c:${c}"></span></label>`).join('')}</div></div>
+   <div class="f" style="font-size:13px;font-weight:600;color:var(--ink2);display:grid;gap:6px">Team colour <span class="muted" style="font-weight:400">${COLORS.includes(col)?esc(colorName(col)):'Not one of the event colours. Choose one below.'}</span><div class="swatches">${COLORS.map(c=>{const other=S.teams.find(x=>x.color===c&&x.id!==id);return `<label title="${esc(colorName(c))}${other?' · used by '+esc(other.name):''}"><input type="radio" name="tm-color" value="${c}" aria-label="${esc(colorName(c))}" ${c===col?'checked':''}><span style="--c:${c};${other?'opacity:.3':''}"></span></label>`}).join('')}</div></div>
    <fieldset><legend>Players</legend>${range(4).map(i=>`<div class="player">
      <label class="f">Player ${i}<input type="text" id="tm-p${i}" value="${esc(pl[i-1]?.name||'')}"></label>
      <label class="f">Phone<input type="tel" id="tm-ph${i}" value="${esc(pl[i-1]?.phone||'')}"></label>
@@ -756,11 +918,19 @@ function teamModal(id){const t=id?teamById(id):null;const nextNo=S.teams.length+
    <span class="err" id="tm-err"></span></form>`,
    `${t?`<button class="btn danger" data-act="delTeam" data-id="${id}" data-confirm="Tap again to delete" style="margin-right:auto">Delete</button>`:''}<button class="btn" data-act="close">Cancel</button><button class="btn pri" type="submit" form="teamForm">${t?'Save team':'Register team'}</button>`)}
 
+function bulkModal(){openModal('Add several teams',`<form id="bulkForm" data-form="bulk" class="stack">
+   <p class="hintline">One team per line, with its colour in brackets. Codes (T01, T02…) are given in this order. Add players and routes afterwards with <b>Edit</b>.</p>
+   <textarea id="bk-list" style="min-height:220px;font-family:var(--mono);font-size:14px" placeholder="Alpha (Orange)&#10;Nemo (Yellow)&#10;The Seeker Squad (Sky Blue)"></textarea>
+   <p class="hintline">Colours: ${PALETTE.map(p=>`<span style="white-space:nowrap"><span class="sw" style="--c:${p[0]}"></span> ${esc(p[1])}</span>`).join(' · ')}</p>
+   <span class="err" id="bk-err"></span></form>`,
+  `<button class="btn" data-act="close">Cancel</button><button class="btn pri" type="submit" form="bulkForm">Add teams</button>`)}
 function spotModal(id){const s=id?spotById(id):null;const no=s?s.no:(Math.max(0,...S.spots.map(x=>+x.no||0))+1);const pin=s?pinOf(s.id):genPin();
   openModal(s?`Spot ${pad(s.no)} · ${s.name}`:'Add a spot',`<form id="spotForm" data-form="spot" data-id="${id||''}" class="stack">
    <div class="fgrid"><label class="f">Spot number<input type="number" id="sp-no" value="${no}" min="1"></label>
    <label class="f">Spot name<input type="text" id="sp-name" value="${esc(s?.name||'')}" required></label></div>
    <label class="f">Area or landmark<input type="text" id="sp-area" value="${esc(s?.area||'')}" placeholder="e.g. Near Teen Darwaza, Bhadra"></label>
+   <label class="f">Map location (optional)<input type="text" id="sp-ll" value="${s&&s.lat!=null?esc(s.lat+', '+s.lng):''}" placeholder="Paste from Google Maps, e.g. 23.0240, 72.5806" autocomplete="off"></label>
+   <p class="hintline" style="margin-top:-6px">Shown on the public map only after the hunt ends. In Google Maps, long-press the place and copy the numbers.</p>
    <div class="fgrid"><label class="f">Volunteer<input type="text" id="sp-vol" value="${esc(s?.volunteer||'')}"></label>
    <label class="f">Volunteer phone<input type="tel" id="sp-ph" value="${esc(s?.phone||'')}"></label>
    <label class="f">Backup volunteer<input type="text" id="sp-vol2" value="${esc(s?.volunteer2||'')}"></label>
@@ -868,7 +1038,7 @@ function onAlerts(s){const before=S.alerts.filter(a=>!a.resolved).length;S.alert
   if(S.role==='vol'&&S.loaded.alerts){for(const a of replies)if(!S.seen.has(a.id)){toast(a.reply.hint!=null?'Hint received from the control room':'Control room replied');try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}}
   replies.forEach(a=>S.seen.add(a.id));changed('alerts')}
 function onStaffErr(e){console.error(e);if(e&&e.code==='permission-denied'){if(S.role==='admin'||S.role==='vol'){toast('Your PIN was changed or removed. Please sign in again.','bad');logout()}}else toast('Lost live connection. Reload the page.','bad')}
-function changed(k){S.loaded[k]=true;if(S.role==='admin')migrate();render()}
+function changed(k){S.loaded[k]=true;if(S.role==='admin'){migrate();scheduleReconcile()}render()}
 async function logout(){const role=S.role;stopListen();S.role=null;S.spotId=null;S.tab='dash';lsSet('hh.session',null);closeModal();render({fresh:true});window.scrollTo(0,0);
   const u=S.auth&&S.auth.currentUser;if(u&&(role==='admin'||role==='vol')){
     await Promise.race([S.fs.doc('grants/'+u.uid).delete().catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);try{await S.auth.signOut()}catch(e){}}}
@@ -888,7 +1058,7 @@ async function migrate(){if(S.migrating||S.migrateTried||S.role!=='admin'||!S.lo
 let recT=null;function scheduleReconcile(){if(S.role!=='admin')return;clearTimeout(recT);recT=setTimeout(reconcile,1500)}
 function reconcile(){if(S.role!=='admin'||!S.loaded.teams||!S.loaded.board)return;const b=new Map(S.board.map(x=>[x.id,x]));
   if(S.loaded.spots&&S.loaded.meta&&S.meta.spotCount!==S.spots.length)quiet(saveMeta({spotCount:S.spots.length})); // for the home page count
-  for(const t of S.teams){const cur=b.get(t.id);if(!cur||stable(pubTeam(t))!==stable(pubTeam(cur)))boardSet(t.id,t)}
+  for(const t of S.teams){const cur=b.get(t.id);if(!cur||stable(pubTeam(t))!==stable(normBoard(cur)))boardSet(t.id,t)}
   for(const x of S.board)if(!teamById(x.id))quiet(S.fs.doc('board/'+x.id).delete())}
 async function seedFromFile(file){let d;try{const txt=await file.text();d=JSON.parse(txt.slice(txt.indexOf('{'),txt.lastIndexOf('}')+1))}catch(e){d=null}
   if(!d||!d.meta||!d.spots){toast("That file doesn't look like seed-data.js.",'bad');return}
@@ -905,6 +1075,9 @@ const ACT={
   board(){S.role='board';lsSet('hh.session',{role:'board'});render({fresh:true});window.scrollTo(0,0)},
   tab(b){S.tab=b.dataset.tab;lsSet('hh.session',{role:S.role,tab:S.tab});render({fresh:true});window.scrollTo(0,0)},
   close(){closeModal()},
+  btab(b){S.boardTab=b.dataset.tab;render({fresh:true})},
+  bsel(b){S.boardSel=S.boardSel===b.dataset.id?null:b.dataset.id;render({fresh:true})},
+  bulkTeams(){bulkModal()},
   togglePins(){S.showPins=!S.showPins;render({force:true})},
   newPin(){$('#sp-pin').value=genPin()},
   addAsg(b){$('#sp-asg').insertAdjacentHTML('beforeend',asgRow('',null,b.dataset.spot))},
@@ -934,7 +1107,9 @@ const ACT={
   async undoLL(b){const t=teamById(b.dataset.id),s=+b.dataset.slot;if(await save(()=>{boardMap(t.id,'lifelines',s,null);return S.db.doc('teams/'+t.id).update({lifelines:{[s]:null}})},'Lifeline returned'))logEv('undo',`Lifeline returned to ${t.name}`,{teamId:t.id})},
   resolve(b){resolveModal(b.dataset.id)},
   async clearBc(){await save(()=>saveMeta({broadcast:null}),'Banner cleared')},
-  async reset(){const ok=await save(async()=>{for(const t of S.teams){const {id,...rest}=t;const doc={...rest,checkins:{},lifelines:{}};await S.db.doc('teams/'+id).set(doc);boardSet(id,doc)}await saveMeta({status:'setup',startedAt:null,endedAt:null})},'All progress cleared');if(ok)logEv('admin','Progress reset')},
+  async reset(){const ok=await save(async()=>{for(const t of S.teams){const {id,...rest}=t;const doc={...rest,checkins:{},lifelines:{}};await S.db.doc('teams/'+id).set(doc);boardSet(id,doc)}await saveMeta({status:'setup',startedAt:null,endedAt:null,broadcast:null});
+    for(const col of ['log','alerts']){const docs=(await S.fs.collection(col).get()).docs;for(let i=0;i<docs.length;i+=400){const b=S.fs.batch();docs.slice(i,i+400).forEach(d=>b.delete(d.ref));await b.commit()}}},
+    'All progress, alerts and the activity log cleared');if(ok)logEv('admin','Progress reset')},
   async csv(){const rows=ranked();const head=['Rank','Code','Team','Captain','Captain phone','Players','Solved','Lifelines used','Start','Finish','Elapsed',...range(N()).map(i=>`Clue ${i} spot`),...range(N()).map(i=>`Clue ${i} arrival`)];
     const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
     const lines=[head.map(q).join(',')].concat(rows.map((r,i)=>{const t=r.t,p=r.p,cap=(t.players||[])[t.captain||0]||{},st=startOf(t);
@@ -954,13 +1129,28 @@ document.addEventListener('change',e=>{
 const FORMS={
   adminLogin(f){pinLogin(f,'admin','#lg-apin','#lg-aerr')},
   volLogin(f){pinLogin(f,'vol','#lg-vpin','#lg-verr')},
+  async bulk(){const err=$('#bk-err');err.textContent='';
+    const lines=$('#bk-list').value.split(/\n+/).map(x=>x.trim()).filter(Boolean);if(!lines.length){err.textContent='Paste at least one team.';return}
+    const have=new Set(S.teams.map(t=>t.name.trim().toLowerCase()));const used=new Set(S.teams.map(t=>t.color));const add=[],bad=[],skip=[];
+    for(const l of lines){const m=/^(.+?)\s*\(\s*([^)]*?)\s*\)\s*$/.exec(l);const name=(m?m[1]:l).trim();
+      if(have.has(name.toLowerCase())){skip.push(name);continue}
+      let color=m&&m[2]?colorByName(m[2]):COLORS.find(c=>!used.has(c));if(!color){bad.push(l);continue}
+      used.add(color);have.add(name.toLowerCase());add.push({name,color})}
+    if(bad.length){err.textContent='Unknown colour on: '+bad.join('; ')+'. Use one of the colours listed below.';return}
+    if(!add.length){err.textContent='All of these teams are already registered.';return}
+    const max=+S.meta.maxTeams||0;if(max&&S.teams.length+add.length>max){err.textContent=`That makes ${S.teams.length+add.length} teams, over the limit of ${max}. Delete the example teams or raise the limit in Settings.`;return}
+    let no=Math.max(0,...S.teams.map(t=>+(String(t.code).match(/\d+/)||[0])[0]));const now=Date.now();
+    const docs=add.map((a,i)=>({id:'t'+(now+i).toString(36),doc:{name:a.name,code:'T'+pad(++no),color:a.color,players:range(4).map(()=>({name:'',phone:''})),captain:0,
+      route:range(N()).map(()=>({spotId:'',clue:'',hint:''})),startAt:null,withdrawn:false,checkins:{},lifelines:{},createdAt:now+i}}));
+    if(await save(async()=>{for(const x of docs){boardSet(x.id,x.doc);await S.db.doc('teams/'+x.id).set(x.doc)}},
+      `${docs.length} team${docs.length>1?'s':''} added${skip.length?` · ${skip.length} already registered`:''}`)){closeModal();logEv('admin',`Added ${docs.length} teams: `+add.map(a=>a.name).join(', '))}},
   async team(f){const id=f.dataset.id;const g=k=>(document.getElementById(k)?.value||'').trim();const name=g('tm-name');if(!name){$('#tm-err').textContent='Give the team a name.';return}
     if(!id&&S.meta.maxTeams&&S.teams.length>=+S.meta.maxTeams){$('#tm-err').textContent=`The team limit (${S.meta.maxTeams}) is reached. Raise it in Settings.`;return}
     const old=id?teamById(id):{};const players=range(4).map(i=>({name:g('tm-p'+i),phone:g('tm-ph'+i)}));
     const rt=range(N()).map(i=>({spotId:g('tm-s'+i),clue:g('tm-c'+i),hint:g('tm-h'+i)}));
     const ids=rt.map(r=>r.spotId).filter(Boolean);if(new Set(ids).size!==ids.length){$('#tm-err').textContent='A spot appears twice in this route. Each clue needs a different spot.';return}
     const st=g('tm-start');
-    const doc={name,code:g('tm-code'),color:(f.querySelector('input[name=tm-color]:checked')||{}).value||COLORS[0],players,captain:+((f.querySelector('input[name=tm-cap]:checked')||{}).value||0),
+    const doc={name,code:g('tm-code'),color:(f.querySelector('input[name=tm-color]:checked')||{}).value||old.color||COLORS[0],players,captain:+((f.querySelector('input[name=tm-cap]:checked')||{}).value||0),
       route:rt,startAt:st?timeToday(st,S.meta.startedAt||Date.now()):null,withdrawn:!!document.getElementById('tm-wd')?.checked,checkins:old.checkins||{},lifelines:old.lifelines||{},createdAt:old.createdAt||Date.now()};
     const tid=id||('t'+Date.now().toString(36));
     if(await save(()=>{boardSet(tid,doc);return S.db.doc('teams/'+tid).set(doc)},id?'Team saved':`${name} registered`)){closeModal();if(!id)logEv('admin',`Registered team ${name}`)}},
@@ -968,7 +1158,8 @@ const FORMS={
     const sid=id||('s'+Date.now().toString(36));const pin=g('sp-pin');const oldPins=id?pinsOf(id):[];const keep=oldPins.length===1&&oldPins[0].id===pin;
     if(!keep&&!/^\d{6,12}$/.test(pin)){err.textContent='The spot PIN must be 6 to 12 digits.';return}
     const clash=S.pins.find(p=>p.id===pin&&!(p.role==='vol'&&p.spotId===sid));if(clash){err.textContent=clash.role==='admin'?'That PIN is the admin PIN. Choose another.':`PIN ${pin} is already used by ${spotLabel(clash.spotId)}.`;return}
-    const doc={no:+g('sp-no')||1,name:g('sp-name'),area:g('sp-area'),volunteer:g('sp-vol'),phone:g('sp-ph'),volunteer2:g('sp-vol2'),notes:g('sp-notes'),clue:g('sp-clue'),hint:g('sp-hint')};
+    const doc={no:+g('sp-no')||1,name:g('sp-name'),area:g('sp-area'),volunteer:g('sp-vol'),phone:g('sp-ph'),volunteer2:g('sp-vol2'),notes:g('sp-notes'),clue:g('sp-clue'),hint:g('sp-hint'),lat:null,lng:null};
+    const llRaw=g('sp-ll');if(llRaw){const m=llRaw.match(/(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);if(!m||Math.abs(+m[1])>90||Math.abs(+m[2])>180){err.textContent='Map location should look like 23.0240, 72.5806.';return}doc.lat=+m[1];doc.lng=+m[2]}
     const asg=[...f.querySelectorAll('.asg')].map(r=>({team:r.querySelector('.sa-team').value,step:+r.querySelector('.sa-step').value})).filter(a=>a.team||a.step);
     if(asg.some(a=>!a.team||!a.step)){err.textContent='Choose both a team and a clue number on every row, or remove the row.';return}
     const seen=new Set();for(const a of asg){if(seen.has(a.team)){err.textContent=`${teamById(a.team)?.name} is listed twice. A team visits each spot only once.`;return}seen.add(a.team)}
@@ -1004,7 +1195,7 @@ const FORMS={
     if(await save(()=>S.db.collection('alerts').add({t:Date.now(),spotId:S.spotId,by:s?.volunteer||'',type,msg,resolved:false}),'Alert sent to the control room')){logEv('alert',`${spotLabel(S.spotId)}: ${type}${msg?' · '+msg:''}`,{spotId:S.spotId});closeModal()}},
   async broadcast(){const msg=$('#bc-msg').value.trim();if(!msg)return;if(await save(()=>saveMeta({broadcast:{msg,t:Date.now()}}),'Sent to all volunteers'))logEv('admin','Broadcast: '+msg)},
   async settings(){const g=k=>(document.getElementById(k)?.value||'').trim();
-    const patch={name:g('set-name'),date:g('set-date'),venue:g('set-venue'),series:g('set-series'),startTime:g('set-stime'),startPoint:g('set-spoint'),presenter:g('set-presenter'),tagline:g('set-tagline'),motto:g('set-motto'),hosts:(document.getElementById('set-hosts')?.value||'').trim(),finish:g('set-finish'),phone:g('set-phone'),phone2:g('set-phone2'),cluesToWin:Math.max(1,Math.min(15,+g('set-clues')||8)),lifelines:Math.max(0,Math.min(10,+g('set-ll')||0)),maxTeams:+g('set-max')||16};
+    const patch={name:g('set-name'),date:g('set-date'),venue:g('set-venue'),series:g('set-series'),startTime:g('set-stime'),startPoint:g('set-spoint'),presenter:g('set-presenter'),tagline:g('set-tagline'),motto:g('set-motto'),hosts:(document.getElementById('set-hosts')?.value||'').trim(),finish:g('set-finish'),phone:g('set-phone'),phone2:g('set-phone2'),cluesToWin:Math.max(1,Math.min(15,+g('set-clues')||8)),lifelines:Math.max(0,Math.min(10,+g('set-ll')||0)),maxTeams:+g('set-max')||16,liveSpots:!!document.getElementById('set-live')?.checked};
     await save(()=>saveMeta(patch),'Event details saved')},
   async adminPin(){const np=$('#ap-new').value.trim();const err=$('#ap-err');err.textContent='';
     if(!/^\d{6,12}$/.test(np)){err.textContent='Use 6 to 12 digits.';return}
